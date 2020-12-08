@@ -138,8 +138,8 @@ public abstract class Employee {
         }
 
         protected Employee builderHelper(Employee employee) {
-            employee.setAllowedPermissions(getAllowedPermissions());
-            employee.setDisallowedPermissions(getDisallowedPermissions());
+            getAllowedPermissions().elements().asIterator().forEachRemaining(permission -> employee.addPermission((PermissionContainer) permission));
+            getDisallowedPermissions().elements().asIterator().forEachRemaining(permission -> employee.addPermission((PermissionContainer) permission));
             return employee;
         }
 

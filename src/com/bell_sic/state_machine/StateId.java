@@ -6,5 +6,5 @@ public enum StateId {
     MainMenu,
     AdminMenu,
     AddDoctorMenu,
-    AddReceptionistMenu
+    AddReceptionistMenu,
 }

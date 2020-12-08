@@ -1,6 +1,6 @@
 package com.bell_sic.entity;
 
-import com.bell_sic.entity.permission.Credentials;
+import com.bell_sic.entity.permission.*;
 
 import java.time.LocalDate;
 
@@ -11,6 +11,10 @@ public class Admin extends Employee {
 
     public Admin(PersonalInfo personalInfo, Credentials credentials) {
         super(personalInfo, credentials);
+        addPermission(ReadHospitalInfoPermission.get());
+        addPermission(WriteHospitalInfoPermission.get());
+        addPermission(ExitPermission.get());
+        addPermission(LogoutPermission.get());
     }
 
     public static Builder builder(PersonalInfo personalInfo, Credentials credentials) {

@@ -1,6 +1,6 @@
 package com.bell_sic.entity.permission;
 
-public abstract class WritePermission extends PermissionContainer {
+public abstract class WritePermission extends PermissionContainer implements WritePermissionInt {
     public WritePermission(String name) {
         super(name);
     }

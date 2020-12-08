@@ -14,6 +14,7 @@ public class AdminControl extends UIState {
 
         addOperation("logout", () -> UILoop.setTransition(Transition.LogOut), LogoutPermission.get());
         addOperation("Add a doctor", () -> UILoop.setTransition(Transition.GoToAddDoctorMenu), WriteHospitalInfoPermission.get());
+        addOperation("Add a receptionist", () -> UILoop.setTransition(Transition.GoToAddReceptionistMenu), WriteHospitalInfoPermission.get());
         addOperation("Return to main menu", () -> UILoop.setTransition(Transition.GoToMainMenu), ExitPermission.get());
         addOperation("Exit application", UILoop::breakLoop, ExitPermission.get());
     }

@@ -4,10 +4,7 @@ import com.bell_sic.state_machine.StateId;
 import com.bell_sic.state_machine.StateMachineSystem;
 import com.bell_sic.state_machine.Transition;
 import com.bell_sic.state_machine.UIState;
-import com.bell_sic.state_machine.states.AddDoctor;
-import com.bell_sic.state_machine.states.AdminControl;
-import com.bell_sic.state_machine.states.Login;
-import com.bell_sic.state_machine.states.MainMenu;
+import com.bell_sic.state_machine.states.*;
 
 public final class UILoop {
     private static final StateMachineSystem fsm = new StateMachineSystem();
@@ -25,14 +22,19 @@ public final class UILoop {
         adminMenuState.addTransition(Transition.LogOut, StateId.Login);
         adminMenuState.addTransition(Transition.GoToMainMenu, StateId.MainMenu);
         adminMenuState.addTransition(Transition.GoToAddDoctorMenu, StateId.AddDoctorMenu);
+        adminMenuState.addTransition(Transition.GoToAddReceptionistMenu, StateId.AddReceptionistMenu);
 
         UIState addDoctorMenu = new AddDoctor();
         addDoctorMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
+
+        UIState addReceptionistMenu = new AddReceptionist();
+        addReceptionistMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
 
         fsm.addState(loginState);
         fsm.addState(mainMenuState);
         fsm.addState(adminMenuState);
         fsm.addState(addDoctorMenu);
+        fsm.addState(addReceptionistMenu);
 
         while (!toBreak) {
             fsm.getCurrentState().executeUI();
