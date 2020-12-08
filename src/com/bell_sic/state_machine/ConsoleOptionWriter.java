@@ -1,9 +1,9 @@
 package com.bell_sic.state_machine;
 
 public class ConsoleOptionWriter {
-    public static class Pair<T,K> {
-        private final T first;
-        private final K second;
+    public static class Pair<T, K> {
+        private T first;
+        private K second;
 
         public Pair(T first, K second) {
             this.first = first;
@@ -16,6 +16,14 @@ public class ConsoleOptionWriter {
 
         public K second() {
             return second;
+        }
+
+        public void setFirst(T first) {
+            this.first = first;
+        }
+
+        public void setSecond(K second) {
+            this.second = second;
         }
     }
 }

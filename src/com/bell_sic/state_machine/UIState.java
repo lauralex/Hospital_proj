@@ -1,6 +1,7 @@
 package com.bell_sic.state_machine;
 
 import com.bell_sic.entity.permission.PermissionContainer;
+import com.bell_sic.utility.ConsoleColoredPrinter;
 import com.bell_sic.utility.ConsoleLineReader;
 
 import java.io.IOException;
@@ -10,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class UIState {
-    protected final List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>> operations = new ArrayList<>();
     private final Map<Transition, StateId> map = new HashMap<>();
     private final StateId currentStateId;
+    private final Operations operations = new Operations();
 
     public UIState(StateId stateId) {
         currentStateId = stateId;
@@ -36,26 +37,43 @@ public abstract class UIState {
                     break;
 
                 } catch (NumberFormatException e) {
-                    System.err.println("Cannot parse the given input! Try again!");
+                    ConsoleColoredPrinter.println("Cannot parse the given input! Try again!");
                     e.printStackTrace();
                 }
             } catch (IOException e) {
-                System.err.println("Cannot read user input!");
+                ConsoleColoredPrinter.println("Cannot read user input!");
                 e.printStackTrace();
             }
         }
     }
 
-    protected void addOperation(String operationString, Runnable operationAction, PermissionContainer permission) {
-        operations.add(new ConsoleOptionWriter.Pair<>(new ConsoleOptionWriter.Pair<>(operationString,
+    protected void addOperation(CharSequence operationString, Runnable operationAction, PermissionContainer permission) {
+        operations.getOperations().add(new ConsoleOptionWriter.Pair<>(new ConsoleOptionWriter.Pair<>(operationString.toString(),
                 operationAction), permission));
+    }
+
+    protected void modifyOperationString(int index, CharSequence charSequence) {
+        try {
+            operations.getOperations().get(index).first().setFirst(charSequence.toString());
+        } catch (IndexOutOfBoundsException e) {
+            ConsoleColoredPrinter.println("Invalid operation index!");
+            e.printStackTrace();
+        }
+    }
+
+    protected void clearOperations() {
+        operations.getOperations().clear();
+    }
+
+    protected List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>> getOperations() {
+        return operations.getOperations();
     }
 
     protected ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>> getPermissibleOperations() {
         var permissibleOperations = new ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>>();
 
         for (var operation :
-                operations) {
+                operations.getOperations()) {
             if (SessionManager.getCurrentUser().checkPermission(operation.second())) {
                 permissibleOperations.add(operation);
             }
@@ -106,4 +124,12 @@ public abstract class UIState {
     }
 
     public abstract void executeUI();
+
+    public static class Operations {
+        private final List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>> operations = new ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>>();
+
+        public List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>> getOperations() {
+            return operations;
+        }
+    }
 }

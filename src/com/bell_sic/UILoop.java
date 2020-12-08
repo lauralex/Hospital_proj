@@ -4,6 +4,7 @@ import com.bell_sic.state_machine.StateId;
 import com.bell_sic.state_machine.StateMachineSystem;
 import com.bell_sic.state_machine.Transition;
 import com.bell_sic.state_machine.UIState;
+import com.bell_sic.state_machine.states.AddDoctor;
 import com.bell_sic.state_machine.states.AdminControl;
 import com.bell_sic.state_machine.states.Login;
 import com.bell_sic.state_machine.states.MainMenu;
@@ -23,11 +24,15 @@ public final class UILoop {
         UIState adminMenuState = new AdminControl();
         adminMenuState.addTransition(Transition.LogOut, StateId.Login);
         adminMenuState.addTransition(Transition.GoToMainMenu, StateId.MainMenu);
+        adminMenuState.addTransition(Transition.GoToAddDoctorMenu, StateId.AddDoctorMenu);
+
+        UIState addDoctorMenu = new AddDoctor();
+        addDoctorMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
 
         fsm.addState(loginState);
         fsm.addState(mainMenuState);
         fsm.addState(adminMenuState);
-
+        fsm.addState(addDoctorMenu);
 
         while (!toBreak) {
             fsm.getCurrentState().executeUI();

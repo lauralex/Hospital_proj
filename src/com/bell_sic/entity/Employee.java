@@ -235,6 +235,16 @@ public abstract class Employee {
         private PersonalInfo() {
         }
 
+        @Override
+        public String toString() {
+            return "PersonalInfo{" +
+                    "name='" + name + '\'' +
+                    ", lastName='" + lastName + '\'' +
+                    ", dateOfBirth=" + dateOfBirth +
+                    ", cityOfBirth='" + cityOfBirth + '\'' +
+                    '}';
+        }
+
         public String getName() {
             return name;
         }
