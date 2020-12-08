@@ -14,7 +14,7 @@ public class AddReceptionist extends AddEmployee{
         addEmployeeUI();
 
         // Apply operation
-        addOperation("Apply operation: (add receptionist",
+        addOperation("Apply operation: (add receptionist)",
                 () -> {
                     Employee.addEmployee(Receptionist.builder(personalInfo, credentials)
                             .addPermission(ManagePatientInfoPermission.get()).build());
