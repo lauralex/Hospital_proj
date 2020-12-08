@@ -28,14 +28,7 @@ public abstract class Employee {
     }
 
     public Employee(PersonalInfo personalInfo, Credentials credentials) {
-        this.personalInfo.setName(personalInfo.getName());
-        this.personalInfo.setLastName(personalInfo.getLastName());
-        this.credentials.setUserName(credentials.getUserName());
-        this.credentials.setPassword(credentials.getPassword());
-        this.personalInfo.setDateOfBirth(personalInfo.getDateOfBirth());
-        this.personalInfo.setCityOfBirth(personalInfo.getCityOfBirth());
-        allowedPermissions = new Permissions();
-        disallowedPermissions = new Permissions();
+        this(personalInfo.getName(), personalInfo.getLastName(), credentials.getUserName(), credentials.getPassword(), personalInfo.getDateOfBirth(), personalInfo.getCityOfBirth());
     }
 
     public static void addEmployee(Employee employee) {
@@ -47,7 +40,7 @@ public abstract class Employee {
     }
 
     public static List<Employee> searchEmployeeByName(String name) {
-        var results = employees.stream().filter(employee -> (employee.getName() + employee.getLastName()).contains(name));
+        var results = employees.stream().filter(employee -> (employee.getPersonalInfo().getName() + employee.getPersonalInfo().getLastName()).contains(name));
         return results.collect(Collectors.toList());
     }
 
@@ -92,56 +85,12 @@ public abstract class Employee {
         disallowedPermissions.add(permission);
     }
 
-    public String getCityOfBirth() {
-        return personalInfo.getCityOfBirth();
-    }
-
-    public void setCityOfBirth(String cityOfBirth) {
-        this.personalInfo.setCityOfBirth(cityOfBirth);
-    }
-
-    public LocalDate getDateOfBirth() {
-        return personalInfo.getDateOfBirth();
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.personalInfo.setDateOfBirth(dateOfBirth);
-    }
-
-    public String getPassword() {
-        return credentials.getPassword();
-    }
-
-    public void setPassword(String password) {
-        this.credentials.setPassword(password);
-    }
-
-    public String getUserName() {
-        return credentials.getUserName();
-    }
-
-    public void setUserName(String userName) {
-        this.credentials.setUserName(userName);
+    public PersonalInfo getPersonalInfo() {
+        return personalInfo;
     }
 
     public Credentials getCredentials() {
         return credentials;
-    }
-
-    public String getLastName() {
-        return personalInfo.getLastName();
-    }
-
-    public void setLastName(String lastName) {
-        this.personalInfo.setLastName(lastName);
-    }
-
-    public String getName() {
-        return personalInfo.getName();
-    }
-
-    public void setName(String name) {
-        this.personalInfo.setName(name);
     }
 
     public Permissions getDisallowedPermissions() {
