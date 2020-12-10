@@ -2,6 +2,8 @@ package com.bell_sic.entity;
 
 import com.bell_sic.entity.permission.Credentials;
 import com.bell_sic.entity.permission.PermissionContainer;
+import com.bell_sic.entity.permission.ReadPermissionInt;
+import com.bell_sic.entity.permission.WritePermissionInt;
 
 import java.security.Permissions;
 import java.time.LocalDate;
@@ -59,6 +61,18 @@ public abstract class Employee {
 
     public void setAllowedPermissions(Permissions allowedPermissions) {
         this.allowedPermissions = allowedPermissions;
+    }
+
+    public Permissions getAllowedReadPermissions() {
+        Permissions readPermissions = new Permissions();
+        allowedPermissions.elementsAsStream().filter(permission -> permission instanceof ReadPermissionInt).forEach(readPermissions::add);
+        return readPermissions;
+    }
+
+    public Permissions getAllowedWritePermissions() {
+        Permissions allowedWritePermissions = new Permissions();
+        allowedPermissions.elementsAsStream().filter(permission -> permission instanceof WritePermissionInt).forEach(allowedWritePermissions::add);
+        return allowedWritePermissions;
     }
 
     public void addPermission(PermissionContainer permission) {

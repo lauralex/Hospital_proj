@@ -126,7 +126,7 @@ public abstract class UIState {
     public abstract void executeUI();
 
     public static class Operations {
-        private final List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>> operations = new ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>>();
+        private final List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>> operations = new ArrayList<>();
 
         public List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, Runnable>, PermissionContainer>> getOperations() {
             return operations;
