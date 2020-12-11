@@ -34,76 +34,132 @@ public abstract class AddEmployee extends UIState {
     }
 
     protected void modifyPersonalInfo() {
-        System.out.print("Insert a name: ");
+        do {
+            System.out.print("Insert a name: ");
 
-        try {
-            personalInfo.setName(ConsoleLineReader.getBufferedReader().readLine());
-        } catch (IOException e) {
-            ConsoleColoredPrinter.println("Invalid input string for name!");
-            e.printStackTrace();
-            ConsoleDelay.addDelay();
+            try {
+                personalInfo.setName(ConsoleLineReader.getBufferedReader().readLine());
+            } catch (IOException e) {
+                ConsoleColoredPrinter.println("Invalid input string for name!");
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                break;
 
-        }
-        System.out.print("Insert last name: ");
-        try {
-            personalInfo.setLastName(ConsoleLineReader.getBufferedReader().readLine());
-        } catch (IOException e) {
-            ConsoleColoredPrinter.println("Invalid input string for last name!");
-            e.printStackTrace();
-            ConsoleDelay.addDelay();
+            } catch (IllegalArgumentException e) {
+                ConsoleColoredPrinter.println(e.getMessage());
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                break;
+            }
+            System.out.print("Insert last name: ");
+            try {
+                personalInfo.setLastName(ConsoleLineReader.getBufferedReader().readLine());
+            } catch (IOException e) {
+                ConsoleColoredPrinter.println("Invalid input string for last name!");
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetPersonalInfo();
+                break;
 
-        }
-        System.out.print("Insert date of birth: ");
-        try {
-            personalInfo.setDateOfBirth(LocalDate.parse(ConsoleLineReader.getBufferedReader().readLine()));
-        } catch (IOException e) {
-            ConsoleColoredPrinter.println("Invalid input string for local date!");
-            e.printStackTrace();
-            ConsoleDelay.addDelay();
+            } catch (IllegalArgumentException e) {
+                ConsoleColoredPrinter.println(e.getMessage());
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetPersonalInfo();
+                break;
+            }
+            System.out.print("Insert date of birth: ");
+            try {
+                personalInfo.setDateOfBirth(LocalDate.parse(ConsoleLineReader.getBufferedReader().readLine()));
+            } catch (IOException e) {
+                ConsoleColoredPrinter.println("Invalid input string for local date!");
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetPersonalInfo();
+                break;
 
-        } catch (DateTimeParseException dateTimeParseException) {
-            ConsoleColoredPrinter.println("Invalid date-time format. Use YYYY-MM-DD");
-            dateTimeParseException.printStackTrace();
-            ConsoleDelay.addDelay();
-        }
-        System.out.print("Insert city of birth: ");
-        try {
-            personalInfo.setCityOfBirth(ConsoleLineReader.getBufferedReader().readLine());
-        } catch (IOException e) {
-            ConsoleColoredPrinter.println("Invalid input string for city of birth!");
-            e.printStackTrace();
-            ConsoleDelay.addDelay();
-        }
+            } catch (DateTimeParseException dateTimeParseException) {
+                ConsoleColoredPrinter.println("Invalid date-time format. Use YYYY-MM-DD");
+                dateTimeParseException.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetPersonalInfo();
+                break;
+            }
+            System.out.print("Insert city of birth: ");
+            try {
+                personalInfo.setCityOfBirth(ConsoleLineReader.getBufferedReader().readLine());
+            } catch (IOException e) {
+                ConsoleColoredPrinter.println("Invalid input string for city of birth!");
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetPersonalInfo();
+                break;
+            } catch (IllegalArgumentException e) {
+                ConsoleColoredPrinter.println(e.getMessage());
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetPersonalInfo();
+                break;
+            }
+        } while (false);
         updateOperationStrings();
 
     }
 
     protected void modifyCredentials() {
-        System.out.print("Insert username: ");
+        do {
+            System.out.print("Insert username: ");
 
-        try {
-            credentials.setUserName(ConsoleLineReader.getBufferedReader().readLine());
-        } catch (IOException e) {
-            ConsoleColoredPrinter.println("Invalid input string for username!");
-            e.printStackTrace();
-            ConsoleDelay.addDelay();
-        }
+            try {
+                credentials.setUserName(ConsoleLineReader.getBufferedReader().readLine());
+            } catch (IOException e) {
+                ConsoleColoredPrinter.println("Invalid input string for username!");
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetCredentials();
+                break;
+            } catch (IllegalArgumentException e) {
+                ConsoleColoredPrinter.println(e.getMessage());
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetCredentials();
+                break;
+            }
 
-        System.out.print("Insert password: ");
+            System.out.print("Insert password: ");
 
-        try {
-            credentials.setPassword(ConsoleLineReader.getBufferedReader().readLine());
-        } catch (IOException e) {
-            ConsoleColoredPrinter.println("Invalid input string for password!");
-            e.printStackTrace();
-            ConsoleDelay.addDelay();
-        }
+            try {
+                credentials.setPassword(ConsoleLineReader.getBufferedReader().readLine());
+            } catch (IOException e) {
+                ConsoleColoredPrinter.println("Invalid input string for password!");
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetCredentials();
+                break;
+            } catch (IllegalArgumentException e) {
+                ConsoleColoredPrinter.println(e.getMessage());
+                e.printStackTrace();
+                ConsoleDelay.addDelay();
+                resetCredentials();
+                break;
+            }
+        } while (false);
         updateOperationStrings();
 
     }
 
     protected void resetData() {
         personalInfo = AddEmployee.getDefaultPersonalInfo();
+        credentials = AddEmployee.getDefaultCredentials();
+        updateOperationStrings();
+    }
+
+    protected void resetPersonalInfo() {
+        personalInfo = AddEmployee.getDefaultPersonalInfo();
+        updateOperationStrings();
+    }
+
+    protected void resetCredentials() {
         credentials = AddEmployee.getDefaultCredentials();
         updateOperationStrings();
     }

@@ -6,12 +6,14 @@ public class Credentials {
     private String userName;
     private String password;
 
-    public Credentials() {
-    }
-
-    public Credentials(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
+    /**
+     * @param userName The username to be set.
+     * @param password The password to be set.
+     * @throws NullPointerException If either {@code userName} or {@code password} are {@code null}.
+     */
+    public Credentials(String userName, String password) throws NullPointerException {
+        this.userName = Objects.requireNonNull(userName, "Username cannot be null!");
+        this.password = Objects.requireNonNull(password, "Password cannot be null!");
     }
 
     @Override
@@ -26,7 +28,13 @@ public class Credentials {
         return userName;
     }
 
-    public void setUserName(String userName) {
+    /**
+     * @param userName The username to be set.
+     * @throws NullPointerException If {@code userName} is {@code null}.
+     * @throws IllegalArgumentException If {@code userName} is empty.
+     */
+    public void setUserName(String userName) throws NullPointerException, IllegalArgumentException {
+        if (userName.isBlank()) throw new IllegalArgumentException("Username cannot be empty!");
         this.userName = userName;
     }
 
@@ -34,7 +42,13 @@ public class Credentials {
         return password;
     }
 
-    public void setPassword(String password) {
+    /**
+     * @param password The password to be set.
+     * @throws NullPointerException If {@code password} is {@code null}.
+     * @throws IllegalArgumentException If {@code password} is empty.
+     */
+    public void setPassword(String password) throws NullPointerException, IllegalArgumentException {
+        if (password.isBlank()) throw new IllegalArgumentException("Password cannot be empty!");
         this.password = password;
     }
 

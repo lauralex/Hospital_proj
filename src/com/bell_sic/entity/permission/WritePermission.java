@@ -1,7 +1,12 @@
 package com.bell_sic.entity.permission;
 
 public abstract class WritePermission extends PermissionContainer implements WritePermissionInt {
-    public WritePermission(String name) {
+    /**
+     * @param name The Write-Permission path.
+     * @throws NullPointerException If {@code name} is {@code null}.
+     * @throws IllegalArgumentException If {@code name} is empty.
+     */
+    public WritePermission(String name) throws NullPointerException, IllegalArgumentException {
         super(name);
     }
 

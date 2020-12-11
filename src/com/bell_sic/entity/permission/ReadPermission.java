@@ -1,7 +1,12 @@
 package com.bell_sic.entity.permission;
 
 public abstract class ReadPermission extends PermissionContainer implements ReadPermissionInt {
-    public ReadPermission(String name) {
+    /**
+     * @param name The Read-Permission path.
+     * @throws NullPointerException If {@code name} is {@code null}.
+     * @throws IllegalArgumentException If {@code name} is empty.
+     */
+    public ReadPermission(String name) throws NullPointerException, IllegalArgumentException {
         super(name);
     }
 
