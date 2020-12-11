@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.bell_sic"},{"l":"com.bell_sic.database"},{"l":"com.bell_sic.entity"},{"l":"com.bell_sic.entity.permission"},{"l":"com.bell_sic.state_machine"},{"l":"com.bell_sic.state_machine.states"},{"l":"com.bell_sic.utility"}];updateSearchResults();
