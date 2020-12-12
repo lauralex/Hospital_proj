@@ -1,17 +1,16 @@
 package com.bell_sic.entity.permission;
 
 public class ManagePatientInfoPermission extends WritePermission implements ReadPermissionInt {
-    private static ManagePatientInfoPermission instance;
+    private static class InstanceHolder {
+        private static final ManagePatientInfoPermission instance = new ManagePatientInfoPermission();
+    }
 
     private ManagePatientInfoPermission() {
         super("hospital.manage_patient");
     }
 
     public static ManagePatientInfoPermission get() {
-        if (instance == null) {
-            instance = new ManagePatientInfoPermission();
-        }
-        return instance;
+        return InstanceHolder.instance;
     }
 
     @Override

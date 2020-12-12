@@ -1,13 +1,12 @@
 package com.bell_sic.entity.permission;
 
 public class LogoutPermission extends ReadPermission {
-    private static LogoutPermission instance;
+    private static class InstanceHolder {
+        private static final LogoutPermission instance = new LogoutPermission();
+    }
 
     public static LogoutPermission get() {
-        if (instance == null) {
-            instance = new LogoutPermission();
-        }
-        return instance;
+        return InstanceHolder.instance;
     }
 
     private LogoutPermission() {

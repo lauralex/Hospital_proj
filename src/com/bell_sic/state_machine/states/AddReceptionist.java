@@ -1,6 +1,5 @@
 package com.bell_sic.state_machine.states;
 
-import com.bell_sic.entity.Employee;
 import com.bell_sic.entity.Receptionist;
 import com.bell_sic.entity.permission.ManagePatientInfoPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
@@ -14,9 +13,9 @@ public class AddReceptionist extends AddEmployee{
         addEmployeeUI();
 
         // Apply operation
-        addOperation("Apply operation: (add receptionist)",
+        stateOperations.addOperation("Apply operation: (add receptionist)",
                 () -> {
-                    Employee.addEmployee(Receptionist.builder(personalInfo, credentials)
+                    ward.addEmployeeToWard(Receptionist.builder(personalInfo, credentials)
                             .addPermission(ManagePatientInfoPermission.get()).build());
                     ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied");
                     resetData();
@@ -26,6 +25,6 @@ public class AddReceptionist extends AddEmployee{
 
     @Override
     public void executeUI() {
-        checkUserInputAndExecute(getPermissibleOperations());
+        stateOperations.checkUserInputAndExecute(stateOperations.getPermissibleOperations());
     }
 }

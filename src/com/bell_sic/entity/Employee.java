@@ -4,6 +4,8 @@ import com.bell_sic.entity.permission.Credentials;
 import com.bell_sic.entity.permission.PermissionContainer;
 import com.bell_sic.entity.permission.ReadPermissionInt;
 import com.bell_sic.entity.permission.WritePermissionInt;
+import com.bell_sic.entity.wards.Ward;
+import com.bell_sic.entity.wards.WardView;
 
 import java.security.Permissions;
 import java.time.LocalDate;
@@ -13,7 +15,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class Employee {
-    private static final List<Employee> employees = new ArrayList<>();
     private final Credentials credentials;
     private final PersonalInfo personalInfo;
     private Permissions allowedPermissions = new Permissions();
@@ -36,16 +37,10 @@ public abstract class Employee {
         this.credentials = Objects.requireNonNull(credentials, "Credentials cannot be null!");
     }
 
-    /**
-     * @param employee The {@linkplain Employee} object to add to the list.
-     * @throws NullPointerException If {@code employee} is {@code null}.
-     */
-    public static void addEmployee(Employee employee) throws NullPointerException {
-        employees.add(Objects.requireNonNull(employee));
-    }
 
-    public static List<Employee> getAll() {
-        return employees;
+    public static List<Employee> getAllEmployees() {
+        return WardView.getWards().stream().map(Ward::getEmployees).collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
+
     }
 
     /**
@@ -54,7 +49,8 @@ public abstract class Employee {
      * @throws NullPointerException If {@code name} is {@code null}.
      */
     public static List<Employee> searchEmployeeByName(String name) throws NullPointerException {
-        var results = employees.stream().filter(employee -> (employee.getPersonalInfo().getName()
+        var allEmployees = getAllEmployees();
+        var results = allEmployees.stream().filter(employee -> (employee.getPersonalInfo().getName()
                 + employee.getPersonalInfo().getLastName()).contains(Objects.requireNonNull(name, "Name cannot be null!")));
         return results.collect(Collectors.toList());
     }
@@ -65,7 +61,8 @@ public abstract class Employee {
      * @throws NullPointerException If {@code type} is {@code null}.
      */
     public static List<Employee> searchEmployeeByType(Class<? extends Employee> type) throws NullPointerException {
-        var results = employees.stream().filter(type::isInstance);
+        var allEmployees = getAllEmployees();
+        var results = allEmployees.stream().filter(type::isInstance);
         return results.collect(Collectors.toList());
     }
 
@@ -75,7 +72,7 @@ public abstract class Employee {
      * @throws NullPointerException When {@code employee} is {@code null}.
      */
     public static boolean removeEmployee(Employee employee) throws NullPointerException {
-        return employees.remove(Objects.requireNonNull(employee));
+        return WardView.getWards().stream().anyMatch(ward -> ward.getEmployees().remove(Objects.requireNonNull(employee)));
     }
 
     public Permissions getAllowedPermissions() {
@@ -223,99 +220,4 @@ public abstract class Employee {
 
     }
 
-    public static class PersonalInfo {
-        private String name;
-        private String lastName;
-        private LocalDate dateOfBirth;
-        private String cityOfBirth;
-
-        /**
-         * @param name The name of the employee.
-         * @param lastName The last name of the employee.
-         * @param dateOfBirth The date of birth of the employee.
-         * @param cityOfBirth The city of birth of the employee.
-         * @throws IllegalArgumentException When any personal info is blank.
-         * @throws NullPointerException When any personal info is {@code null}.
-         */
-        public PersonalInfo(String name, String lastName, LocalDate dateOfBirth, String cityOfBirth) throws IllegalArgumentException, NullPointerException {
-            if (name.isBlank()) throw new IllegalArgumentException("Name cannot be empty!");
-            if (lastName.isBlank()) throw new IllegalArgumentException("Last name cannot be empty!");
-            if (cityOfBirth.isBlank()) throw new IllegalArgumentException("City of birth cannot be empty!");
-
-            this.name = name;
-            this.lastName = lastName;
-            this.dateOfBirth = Objects.requireNonNull(dateOfBirth, "Date of birth cannot be null");
-            this.cityOfBirth = cityOfBirth;
-        }
-
-        @Override
-        public String toString() {
-            return "PersonalInfo{" +
-                    "name='" + name + '\'' +
-                    ", lastName='" + lastName + '\'' +
-                    ", dateOfBirth=" + dateOfBirth +
-                    ", cityOfBirth='" + cityOfBirth + '\'' +
-                    '}';
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * @param name The name of the employee.
-         * @throws IllegalArgumentException When {@code name} is blank.
-         * @throws NullPointerException     When {@code name} is {@code null}.
-         */
-        public void setName(String name) throws IllegalArgumentException, NullPointerException {
-            if (name.isBlank()) {
-                throw new IllegalArgumentException("Name cannot be empty!");
-            }
-            this.name = name;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        /**
-         * @param lastName The last name of the employee.
-         * @throws IllegalArgumentException When {@code lastName} is blank.
-         * @throws NullPointerException     When {@code lastName} is {@code null}.
-         */
-        public void setLastName(String lastName) throws IllegalArgumentException, NullPointerException {
-            if (lastName.isBlank()) {
-                throw new IllegalArgumentException("Last name cannot be empty!");
-            }
-            this.lastName = lastName;
-        }
-
-        public LocalDate getDateOfBirth() {
-            return dateOfBirth;
-        }
-
-        /**
-         * @param dateOfBirth The date of birth of the employee.
-         * @throws NullPointerException When {@code dateOfBirth} is {@code null}.
-         */
-        public void setDateOfBirth(LocalDate dateOfBirth) throws NullPointerException {
-            this.dateOfBirth = Objects.requireNonNull(dateOfBirth, "Date of birth cannot be null!");
-        }
-
-        public String getCityOfBirth() {
-            return cityOfBirth;
-        }
-
-        /**
-         * @param cityOfBirth The city of birth of the employee.
-         * @throws IllegalArgumentException When the {@code cityOfBirth} is blank.
-         * @throws NullPointerException When the {@code cityOfBirth} is {@code null}.
-         */
-        public void setCityOfBirth(String cityOfBirth) throws IllegalArgumentException, NullPointerException {
-            if (cityOfBirth.isBlank()) {
-                throw new IllegalArgumentException("City of birth cannot be empty!");
-            }
-            this.cityOfBirth = cityOfBirth;
-        }
-    }
 }

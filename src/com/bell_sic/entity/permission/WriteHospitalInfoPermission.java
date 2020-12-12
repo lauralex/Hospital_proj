@@ -1,13 +1,12 @@
 package com.bell_sic.entity.permission;
 
 public class WriteHospitalInfoPermission extends WritePermission {
-    private static WriteHospitalInfoPermission instance;
+    private static class InstanceHolder {
+        private static final WriteHospitalInfoPermission instance = new WriteHospitalInfoPermission();
+    }
 
     public static WriteHospitalInfoPermission get() {
-        if (instance == null) {
-            instance = new WriteHospitalInfoPermission();
-        }
-        return instance;
+        return InstanceHolder.instance;
     }
 
     private WriteHospitalInfoPermission() {

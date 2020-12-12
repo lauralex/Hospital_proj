@@ -1,7 +1,6 @@
 package com.bell_sic.state_machine.states;
 
 import com.bell_sic.entity.Doctor;
-import com.bell_sic.entity.Employee;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.LogoutPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
@@ -15,9 +14,9 @@ public class AddDoctor extends AddEmployee {
 
         addEmployeeUI();
 
-        // INDEX 3 OPERATION
-        addOperation("Apply operation (add doctor)", () -> {
-                    Employee.addEmployee(
+        // APPLY OPERATION
+        stateOperations.addOperation("Apply operation (add doctor)", () -> {
+                    ward.addEmployeeToWard(
                             Doctor.builder(personalInfo, credentials)
                                     .addPermission(ExitPermission.get())
                                     .addPermission(LogoutPermission.get()).build());
@@ -29,7 +28,7 @@ public class AddDoctor extends AddEmployee {
 
     @Override
     public void executeUI() {
-        checkUserInputAndExecute(getPermissibleOperations());
+        stateOperations.checkUserInputAndExecute(stateOperations.getPermissibleOperations());
     }
 
 

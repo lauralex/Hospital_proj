@@ -1,11 +1,14 @@
 package com.bell_sic.state_machine.states;
 
 import com.bell_sic.UILoop;
-import com.bell_sic.entity.Employee;
+import com.bell_sic.entity.PersonalInfo;
 import com.bell_sic.entity.permission.Credentials;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
+import com.bell_sic.entity.wards.Ward;
+import com.bell_sic.entity.wards.WardView;
 import com.bell_sic.state_machine.StateId;
+import com.bell_sic.state_machine.StateOperations;
 import com.bell_sic.state_machine.Transition;
 import com.bell_sic.state_machine.UIState;
 import com.bell_sic.utility.ConsoleColoredPrinter;
@@ -15,22 +18,31 @@ import com.bell_sic.utility.ConsoleLineReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public abstract class AddEmployee extends UIState {
-    protected Employee.PersonalInfo personalInfo = AddEmployee.getDefaultPersonalInfo();
+    protected PersonalInfo personalInfo = AddEmployee.getDefaultPersonalInfo();
     protected Credentials credentials = AddEmployee.getDefaultCredentials();
+    protected Ward ward = AddEmployee.getDefaultWard();
 
     public AddEmployee(StateId stateId) {
         super(stateId);
     }
 
-    private static Employee.PersonalInfo getDefaultPersonalInfo() {
-        return new Employee.PersonalInfo("Giovanni",
+    private static PersonalInfo getDefaultPersonalInfo() {
+        return new PersonalInfo("Giovanni",
                 "Neve", LocalDate.now(), "Bronte");
     }
 
     private static Credentials getDefaultCredentials() {
         return new Credentials("bongo", "cresto");
+    }
+
+    private static Ward getDefaultWard() {
+        var defaultWard = WardView.getWards().stream().findAny();
+        if (defaultWard.isEmpty()) throw new NoSuchElementException("There is no ward!");
+        return Objects.requireNonNull(defaultWard.get(), "Ward cannot be null!");
     }
 
     protected void modifyPersonalInfo() {
@@ -148,9 +160,23 @@ public abstract class AddEmployee extends UIState {
 
     }
 
+    protected void modifyWard() {
+        StateOperations operations = new StateOperations();
+        for (var ward :
+                WardView.getWards()) {
+            operations.addOperation(ward.toString(), () -> {
+                this.ward = ward;
+                updateOperationStrings();
+            }, WriteHospitalInfoPermission.get());
+        }
+
+        operations.checkUserInputAndExecute(operations.getPermissibleOperations());
+    }
+
     protected void resetData() {
         personalInfo = AddEmployee.getDefaultPersonalInfo();
         credentials = AddEmployee.getDefaultCredentials();
+        ward = AddEmployee.getDefaultWard();
         updateOperationStrings();
     }
 
@@ -164,22 +190,33 @@ public abstract class AddEmployee extends UIState {
         updateOperationStrings();
     }
 
+    protected void resetWard() {
+        ward = AddEmployee.getDefaultWard();
+    }
+
     private void updateOperationStrings() {
-        modifyOperationString(1, personalInfo.toString());
-        modifyOperationString(2, credentials.toString());
+        stateOperations.modifyOperationString("modify personal", personalInfo.toString());
+        stateOperations.modifyOperationString("modify cred", credentials.toString());
+        stateOperations.modifyOperationString("modify assigned", ward.toString());
     }
 
     protected void addEmployeeUI() {
         // INDEX 0 OPERATION
-        addOperation("Go To admin", () -> {
+        stateOperations.addOperation("Go To admin", () -> {
             resetData();
             UILoop.setTransition(Transition.GoToAdminMenu);
         }, ExitPermission.get());
 
-        // INDEX 1 OPERATION
-        addOperation("Modify personal info: " + personalInfo, this::modifyPersonalInfo, WriteHospitalInfoPermission.get());
+        // INDEX 1 OPERATION (CHECK THE updateOperationStrings() METHOD)
+        stateOperations.addOperation("Modify personal info: ", this::modifyPersonalInfo, WriteHospitalInfoPermission.get());
 
-        // INDEX 2 OPERATION
-        addOperation("Modify credentials: " + credentials, this::modifyCredentials, WriteHospitalInfoPermission.get());
+        // INDEX 2 OPERATION (CHECK THE updateOperationStrings() METHOD)
+        stateOperations.addOperation("Modify credentials: ", this::modifyCredentials, WriteHospitalInfoPermission.get());
+
+        // INDEX 3 OPERATION
+        stateOperations.addOperation("Modify assigned ward: ", this::modifyWard, WriteHospitalInfoPermission.get());
+
+
+        updateOperationStrings();
     }
 }
