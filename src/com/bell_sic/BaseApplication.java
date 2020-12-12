@@ -1,9 +1,7 @@
 package com.bell_sic;
 
-import java.lang.reflect.InvocationTargetException;
-
 public class BaseApplication {
-    public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public static void main(String[] args) {
         // System.out.println("Hello");
         // try (Connection conn = MariaDBConnectionManager.getInstance().getConnection()) {
         //     String statement = "select * from hw1_follow";

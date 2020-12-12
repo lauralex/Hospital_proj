@@ -6,13 +6,13 @@ import com.bell_sic.utility.ConsoleLineReader;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 public class StateOperations {
     private final Operations operations = new Operations();
 
-    public void checkUserInputAndExecute(ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<Operations.StringTuple, Runnable>, PermissionContainer>> permissibleOperations) {
+    public void checkUserInputAndExecute(Operations permissibleOperations) throws NullPointerException {
         var opLength = permissibleOperations.size();
 
         while (true) {
@@ -41,59 +41,48 @@ public class StateOperations {
         }
     }
 
-    public void addOperation(CharSequence operationString, Runnable operationAction, PermissionContainer permission) {
-        operations.getOperations().add(new ConsoleOptionWriter.Pair<>(
-                new ConsoleOptionWriter.Pair<>(new Operations.StringTuple(operationString.toString(), ""), operationAction), permission)
+    public void addOperation(CharSequence operationString, Runnable operationAction, PermissionContainer permission) throws NullPointerException {
+        operations.add(new ConsoleOptionWriter.Pair<>(
+                new ConsoleOptionWriter.Pair<>(new ConsoleOptionWriter.Pair<>(operationString.toString(), ""), operationAction), permission)
         );
     }
 
-    public void modifyOperationString(int index, CharSequence charSequence) {
+    public void modifyOperationString(int index, CharSequence charSequence) throws NullPointerException {
         try {
-            operations.getOperations().get(index).first().first().setSecond(charSequence.toString());
+            operations.get(index).first().first().setSecond(charSequence.toString());
         } catch (IndexOutOfBoundsException e) {
             ConsoleColoredPrinter.println("Invalid operation index!");
             e.printStackTrace();
         }
     }
 
-    public void modifyOperationString(CharSequence search, CharSequence charSequence) {
-        operations.getOperations().stream().filter(pairPermissionContainerPair -> pairPermissionContainerPair.first().first().first()
-                .toLowerCase().contains(search.toString().toLowerCase())).findFirst()
-                .ifPresent(pairPermissionContainerPair -> pairPermissionContainerPair
-                        .first().first().setSecond(charSequence.toString()));
+    public void modifyOperationString(CharSequence search, CharSequence charSequence) throws NoSuchElementException {
+        var res = operations.stream().filter(pairPermissionContainerPair -> pairPermissionContainerPair.first().first().first()
+                .toLowerCase().contains(search.toString().toLowerCase()));
+
+
+        res.findFirst().ifPresentOrElse(pairPermissionContainerPair -> pairPermissionContainerPair
+                .first()
+                .first()
+                .setSecond(charSequence.toString()), () -> {
+            throw new NoSuchElementException("No operation found!");
+        });
     }
 
     public void clearOperations() {
-        operations.getOperations().clear();
+        operations.clear();
     }
 
-    public List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<Operations.StringTuple, Runnable>, PermissionContainer>> getOperations() {
-        return operations.getOperations();
+    public Operations getOperations() {
+        return operations;
     }
 
-    public ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<Operations.StringTuple, Runnable>, PermissionContainer>> getPermissibleOperations() {
-        ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<Operations.StringTuple, Runnable>, PermissionContainer>> permissibleOperations = new ArrayList<>();
+    public Operations getPermissibleOperations() {
 
-        for (ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<Operations.StringTuple, Runnable>, PermissionContainer> operation :
-                operations.getOperations()) {
-            if (SessionManager.getCurrentUser().checkPermission(operation.second())) {
-                permissibleOperations.add(operation);
-            }
-        }
-        return permissibleOperations;
+        return operations.stream().filter(operation -> SessionManager.getCurrentUser().checkPermission(operation.second())).collect(Collectors.toCollection(Operations::new));
+
     }
 
-    public static class Operations {
-        private final List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<StringTuple, Runnable>, PermissionContainer>> operations = new ArrayList<>();
-
-        public static class StringTuple extends ConsoleOptionWriter.Pair<String, String> {
-
-            public StringTuple(String first, String second) {
-                super(first, second);
-            }
-        }
-        public List<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<StringTuple, Runnable>, PermissionContainer>> getOperations() {
-            return operations;
-        }
+    public static class Operations extends ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, String>, Runnable>, PermissionContainer>> {
     }
 }

@@ -6,7 +6,6 @@ import com.bell_sic.entity.Employee;
 import com.bell_sic.entity.PersonalInfo;
 import com.bell_sic.entity.permission.*;
 import com.bell_sic.entity.wards.EmergencyWard;
-import com.bell_sic.entity.wards.Ward;
 import com.bell_sic.entity.wards.WardView;
 import com.bell_sic.state_machine.SessionManager;
 import com.bell_sic.state_machine.StateId;

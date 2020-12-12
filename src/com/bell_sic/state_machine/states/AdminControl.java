@@ -4,11 +4,14 @@ import com.bell_sic.UILoop;
 import com.bell_sic.entity.Doctor;
 import com.bell_sic.entity.Employee;
 import com.bell_sic.entity.Receptionist;
-import com.bell_sic.entity.permission.*;
-import com.bell_sic.state_machine.*;
+import com.bell_sic.entity.permission.ExitPermission;
+import com.bell_sic.entity.permission.LogoutPermission;
+import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
+import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
+import com.bell_sic.state_machine.StateId;
+import com.bell_sic.state_machine.Transition;
+import com.bell_sic.state_machine.UIState;
 import com.bell_sic.utility.ConsoleColoredPrinter;
-
-import java.util.ArrayList;
 
 public class AdminControl extends UIState {
     public AdminControl() {
@@ -26,9 +29,7 @@ public class AdminControl extends UIState {
 
     @Override
     public void executeUI() {
-        ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<StateOperations.Operations.StringTuple, Runnable>, PermissionContainer>> permissibleOperations = stateOperations.getPermissibleOperations();
-
-        stateOperations.checkUserInputAndExecute(permissibleOperations);
+        stateOperations.checkUserInputAndExecute(stateOperations.getPermissibleOperations());
     }
 
     private static void showAllEmployees() {

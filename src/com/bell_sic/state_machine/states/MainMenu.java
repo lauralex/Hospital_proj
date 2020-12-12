@@ -3,11 +3,10 @@ package com.bell_sic.state_machine.states;
 import com.bell_sic.UILoop;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.LogoutPermission;
-import com.bell_sic.entity.permission.PermissionContainer;
 import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
-import com.bell_sic.state_machine.*;
-
-import java.util.ArrayList;
+import com.bell_sic.state_machine.StateId;
+import com.bell_sic.state_machine.Transition;
+import com.bell_sic.state_machine.UIState;
 
 public class MainMenu extends UIState {
     public MainMenu() {
@@ -20,7 +19,6 @@ public class MainMenu extends UIState {
 
     @Override
     public void executeUI() {
-        ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<StateOperations.Operations.StringTuple, Runnable>, PermissionContainer>> permissibleOperations = stateOperations.getPermissibleOperations();
-        stateOperations.checkUserInputAndExecute(permissibleOperations);
+        stateOperations.checkUserInputAndExecute(stateOperations.getPermissibleOperations());
     }
 }
