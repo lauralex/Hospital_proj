@@ -3,6 +3,7 @@ package com.bell_sic.state_machine;
 import com.bell_sic.entity.permission.PermissionContainer;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 import com.bell_sic.utility.ConsoleLineReader;
+import com.bell_sic.utility.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,8 +43,8 @@ public class StateOperations {
     }
 
     public void addOperation(CharSequence operationString, Runnable operationAction, PermissionContainer permission) throws NullPointerException {
-        operations.add(new ConsoleOptionWriter.Pair<>(
-                new ConsoleOptionWriter.Pair<>(new ConsoleOptionWriter.Pair<>(operationString.toString(), ""), operationAction), permission)
+        operations.add(new Pair<>(
+                new Pair<>(new Pair<>(operationString.toString(), ""), operationAction), permission)
         );
     }
 
@@ -83,6 +84,6 @@ public class StateOperations {
 
     }
 
-    public static class Operations extends ArrayList<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<ConsoleOptionWriter.Pair<String, String>, Runnable>, PermissionContainer>> {
+    public static class Operations extends ArrayList<Pair<Pair<Pair<String, String>, Runnable>, PermissionContainer>> {
     }
 }
