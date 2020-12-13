@@ -3,6 +3,7 @@ package com.bell_sic.state_machine;
 import com.bell_sic.entity.permission.PermissionContainer;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 import com.bell_sic.utility.ConsoleLineReader;
+import com.bell_sic.utility.OnlyElemCollector;
 import com.bell_sic.utility.Pair;
 
 import java.io.IOException;
@@ -57,17 +58,15 @@ public class StateOperations {
         }
     }
 
-    public void modifyOperationString(CharSequence search, CharSequence charSequence) throws NoSuchElementException {
+    public void modifyOperationString(CharSequence search, CharSequence charSequence) throws NoSuchElementException, IllegalArgumentException, NullPointerException {
         var res = operations.stream().filter(pairPermissionContainerPair -> pairPermissionContainerPair.first().first().first()
                 .toLowerCase().contains(search.toString().toLowerCase()));
 
 
-        res.findFirst().ifPresentOrElse(pairPermissionContainerPair -> pairPermissionContainerPair
+        res.collect(OnlyElemCollector.getOnly())
                 .first()
                 .first()
-                .setSecond(charSequence.toString()), () -> {
-            throw new NoSuchElementException("No operation found!");
-        });
+                .setSecond(charSequence.toString());
     }
 
     public void clearOperations() {
