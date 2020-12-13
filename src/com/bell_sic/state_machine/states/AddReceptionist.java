@@ -25,6 +25,6 @@ public class AddReceptionist extends AddEmployee{
 
     @Override
     public void executeUI() {
-        stateOperations.checkUserInputAndExecute(stateOperations.getPermissibleOperations());
+        stateOperations.checkUserInputAndExecute();
     }
 }

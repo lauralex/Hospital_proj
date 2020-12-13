@@ -19,6 +19,6 @@ public class MainMenu extends UIState {
 
     @Override
     public void executeUI() {
-        stateOperations.checkUserInputAndExecute(stateOperations.getPermissibleOperations());
+        stateOperations.checkUserInputAndExecute();
     }
 }

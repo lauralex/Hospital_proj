@@ -169,8 +169,8 @@ public abstract class AddEmployee extends UIState {
                 updateOperationStrings();
             }, WriteHospitalInfoPermission.get());
         }
-
-        operations.checkUserInputAndExecute(operations.getPermissibleOperations());
+        operations.addOperation("Go back", () -> {}, WriteHospitalInfoPermission.get());
+        operations.checkUserInputAndExecute();
     }
 
     protected void resetData() {
@@ -208,15 +208,13 @@ public abstract class AddEmployee extends UIState {
         }, ExitPermission.get());
 
         // INDEX 1 OPERATION (CHECK THE updateOperationStrings() METHOD)
-        stateOperations.addOperation("Modify personal info: ", this::modifyPersonalInfo, WriteHospitalInfoPermission.get());
+        stateOperations.addOperation("Modify personal info: ", personalInfo.toString(), this::modifyPersonalInfo, WriteHospitalInfoPermission.get());
 
         // INDEX 2 OPERATION (CHECK THE updateOperationStrings() METHOD)
-        stateOperations.addOperation("Modify credentials: ", this::modifyCredentials, WriteHospitalInfoPermission.get());
+        stateOperations.addOperation("Modify credentials: ", credentials.toString(), this::modifyCredentials, WriteHospitalInfoPermission.get());
 
         // INDEX 3 OPERATION
-        stateOperations.addOperation("Modify assigned ward: ", this::modifyWard, WriteHospitalInfoPermission.get());
+        stateOperations.addOperation("Modify assigned ward: ", ward.toString(), this::modifyWard, WriteHospitalInfoPermission.get());
 
-
-        updateOperationStrings();
     }
 }

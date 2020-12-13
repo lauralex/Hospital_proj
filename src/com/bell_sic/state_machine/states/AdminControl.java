@@ -29,7 +29,7 @@ public class AdminControl extends UIState {
 
     @Override
     public void executeUI() {
-        stateOperations.checkUserInputAndExecute(stateOperations.getPermissibleOperations());
+        stateOperations.checkUserInputAndExecute();
     }
 
     private static void showAllEmployees() {

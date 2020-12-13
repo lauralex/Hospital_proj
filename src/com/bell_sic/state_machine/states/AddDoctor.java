@@ -28,7 +28,7 @@ public class AddDoctor extends AddEmployee {
 
     @Override
     public void executeUI() {
-        stateOperations.checkUserInputAndExecute(stateOperations.getPermissibleOperations());
+        stateOperations.checkUserInputAndExecute();
     }
 
 

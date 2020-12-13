@@ -9,6 +9,7 @@ import com.bell_sic.utility.Pair;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class StateOperations {
@@ -28,7 +29,10 @@ public class StateOperations {
                 try {
                     int opNumber = Integer.parseInt(option);
 
-                    if (!(opNumber < opLength)) continue;
+                    if (!(opNumber < opLength)) {
+                        ConsoleColoredPrinter.println("Not a valid number: it should be from 0 to " + (opLength - 1));
+                        continue;
+                    }
                     permissibleOperations.get(opNumber).first().second().run();
                     break;
 
@@ -43,9 +47,19 @@ public class StateOperations {
         }
     }
 
+    public void checkUserInputAndExecute() {
+        checkUserInputAndExecute(getPermissibleOperations());
+    }
+
     public void addOperation(CharSequence operationString, Runnable operationAction, PermissionContainer permission) throws NullPointerException {
         operations.add(new Pair<>(
                 new Pair<>(new Pair<>(operationString.toString(), ""), operationAction), permission)
+        );
+    }
+
+    public void addOperation(CharSequence operationString, CharSequence second, Runnable operationAction, PermissionContainer permission) throws NullPointerException {
+        operations.add(new Pair<>(
+                new Pair<>(new Pair<>(operationString.toString(), second.toString()), operationAction), permission)
         );
     }
 
@@ -58,15 +72,20 @@ public class StateOperations {
         }
     }
 
-    public void modifyOperationString(CharSequence search, CharSequence charSequence) throws NoSuchElementException, IllegalArgumentException, NullPointerException {
+    public void modifyOperationString(CharSequence search, CharSequence second) throws NoSuchElementException, IllegalArgumentException, NullPointerException {
+        modifyOperationString(search, null, second);
+    }
+
+    public void modifyOperationString(CharSequence search, CharSequence first, CharSequence second) throws NoSuchElementException, IllegalArgumentException, NullPointerException {
         var res = operations.stream().filter(pairPermissionContainerPair -> pairPermissionContainerPair.first().first().first()
                 .toLowerCase().contains(search.toString().toLowerCase()));
 
 
-        res.collect(OnlyElemCollector.getOnly())
+        var stringTuple = res.collect(OnlyElemCollector.getOnly())
                 .first()
-                .first()
-                .setSecond(charSequence.toString());
+                .first();
+        stringTuple.setFirst(Objects.requireNonNullElse(first, stringTuple.first()).toString());
+        stringTuple.setSecond(second.toString());
     }
 
     public void clearOperations() {
