@@ -19,8 +19,8 @@ public class AddReceptionist extends AddEmployee{
                             .addPermission(ManagePatientInfoPermission.get()).build());
                     ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied");
                     resetData();
-                }, WriteHospitalInfoPermission.get());
-
+                }, WriteHospitalInfoPermission.get()
+        );
     }
 
     @Override

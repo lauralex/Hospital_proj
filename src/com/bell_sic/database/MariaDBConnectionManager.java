@@ -1,45 +1,41 @@
 package com.bell_sic.database;
 
 import org.mariadb.jdbc.MariaDbDataSource;
+import org.mariadb.jdbc.MariaDbPoolDataSource;
 
-import javax.sql.PooledConnection;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class MariaDBConnectionManager implements ConnectionManager {
-    // START OF DATABASE PARAMETERS SECTION
+    //region DATABASE CONNECTION PARAMETERS
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private static final String SERVER_NAME = "localhost";
     private static final String PORT_NUMBER = "3306";
     private static final String DATABASE = "bellia_alessandro";
-    // END OF DATABASE PARAMETERS SECTION
+    //endregion
 
-    private static Connection CONNECTION;
-    private static PooledConnection POOLED_CONNECTION;
+    private static final DataSource MARIADB_DATASOURCE = new MariaDbDataSource(SERVER_NAME, Integer.parseInt(PORT_NUMBER), DATABASE);
+    private static final DataSource MARIADB_POOL_DATASOURCE = new MariaDbPoolDataSource(SERVER_NAME, Integer.parseInt(PORT_NUMBER), DATABASE);
 
-    private static MariaDBConnectionManager instance;
-
-    private MariaDBConnectionManager() throws SQLException {
-        MariaDbDataSource mariaDbDataSource = new MariaDbDataSource(SERVER_NAME, Integer.parseInt(PORT_NUMBER), DATABASE);
-        CONNECTION = mariaDbDataSource.getConnection(USER, PASSWORD);
-        POOLED_CONNECTION = mariaDbDataSource.getPooledConnection(USER, PASSWORD);
+    private static class InstanceHolder {
+        private static final MariaDBConnectionManager instance = new MariaDBConnectionManager();
     }
 
-    public static MariaDBConnectionManager getInstance() throws SQLException {
-        if (instance == null) {
-            instance = new MariaDBConnectionManager();
-        }
-        return instance;
+    public static MariaDBConnectionManager getInstance() {
+        return InstanceHolder.instance;
     }
 
-    @Override
+    private MariaDBConnectionManager() {
+        //no instance
+    }
+
     public Connection getConnection() throws SQLException {
-        return CONNECTION;
+        return MARIADB_DATASOURCE.getConnection();
     }
 
-    @Override
-    public PooledConnection getPooledConnection() throws SQLException {
-        return POOLED_CONNECTION;
+    public Connection getPooledConnection() throws SQLException {
+        return MARIADB_POOL_DATASOURCE.getConnection();
     }
 }
