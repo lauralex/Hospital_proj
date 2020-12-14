@@ -13,17 +13,6 @@ public class AddDoctor extends AddEmployee {
         super(StateId.AddDoctorMenu);
 
         addEmployeeUI();
-
-        // APPLY OPERATION
-        stateOperations.addOperation("Apply operation (add doctor)", () -> {
-                    ward.addEmployeeToWard(
-                            Doctor.builder(personalInfo, credentials)
-                                    .addPermission(ExitPermission.get())
-                                    .addPermission(LogoutPermission.get()).build());
-                    ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied!");
-                    resetData();
-                },
-                WriteHospitalInfoPermission.get());
     }
 
     @Override
@@ -32,4 +21,16 @@ public class AddDoctor extends AddEmployee {
     }
 
 
+    @Override
+    protected void addToWardOperation() {
+        // APPLY OPERATION
+        stateOperations.addOperation("Apply operation (add doctor)", () -> {
+            ward.addEmployeeToWard(
+                    Doctor.builder(personalInfo, credentials)
+                            .addPermission(ExitPermission.get())
+                            .addPermission(LogoutPermission.get()).build());
+            ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied!");
+            resetData();
+        }, WriteHospitalInfoPermission.get());
+    }
 }

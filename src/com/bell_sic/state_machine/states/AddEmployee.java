@@ -18,8 +18,6 @@ import com.bell_sic.utility.ConsoleLineReader;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public abstract class AddEmployee extends UIState {
     protected PersonalInfo personalInfo = AddEmployee.getDefaultPersonalInfo();
@@ -40,9 +38,7 @@ public abstract class AddEmployee extends UIState {
     }
 
     private static Ward getDefaultWard() {
-        var defaultWard = WardView.getWards().stream().findAny();
-        if (defaultWard.isEmpty()) throw new NoSuchElementException("There is no ward!");
-        return Objects.requireNonNull(defaultWard.get(), "Ward cannot be null!");
+        return WardView.getAnyWard();
     }
 
     protected void modifyPersonalInfo() {
@@ -194,11 +190,13 @@ public abstract class AddEmployee extends UIState {
         ward = AddEmployee.getDefaultWard();
     }
 
-    private void updateOperationStrings() {
+    protected void updateOperationStrings() {
         stateOperations.modifyOperationString("modify personal", personalInfo.toString());
         stateOperations.modifyOperationString("modify cred", credentials.toString());
         stateOperations.modifyOperationString("modify assigned", ward.toString());
     }
+
+    protected abstract void addToWardOperation();
 
     protected void addEmployeeUI() {
         // INDEX 0 OPERATION
@@ -215,6 +213,8 @@ public abstract class AddEmployee extends UIState {
 
         // INDEX 3 OPERATION
         stateOperations.addOperation("Modify assigned ward: ", ward.toString(), this::modifyWard, WriteHospitalInfoPermission.get());
+
+        addToWardOperation();
 
     }
 }

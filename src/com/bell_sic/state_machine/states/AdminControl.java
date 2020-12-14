@@ -3,15 +3,21 @@ package com.bell_sic.state_machine.states;
 import com.bell_sic.UILoop;
 import com.bell_sic.entity.Doctor;
 import com.bell_sic.entity.Employee;
+import com.bell_sic.entity.Patient;
 import com.bell_sic.entity.Receptionist;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.LogoutPermission;
 import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
+import com.bell_sic.entity.wards.Ward;
+import com.bell_sic.entity.wards.WardView;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.state_machine.Transition;
 import com.bell_sic.state_machine.UIState;
 import com.bell_sic.utility.ConsoleColoredPrinter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminControl extends UIState {
     public AdminControl() {
@@ -20,7 +26,9 @@ public class AdminControl extends UIState {
         stateOperations.addOperation("logout", () -> UILoop.setTransition(Transition.LogOut), LogoutPermission.get());
         stateOperations.addOperation("Add a doctor", () -> UILoop.setTransition(Transition.GoToAddDoctorMenu), WriteHospitalInfoPermission.get());
         stateOperations.addOperation("Add a receptionist", () -> UILoop.setTransition(Transition.GoToAddReceptionistMenu), WriteHospitalInfoPermission.get());
+        stateOperations.addOperation("Add patient", () -> UILoop.setTransition(Transition.GoToAddPatientMenu), WriteHospitalInfoPermission.get());
         stateOperations.addOperation("Show all employees", AdminControl::showAllEmployees, ReadHospitalInfoPermission.get());
+        stateOperations.addOperation("Show all patients", AdminControl::showAllPatients, ReadHospitalInfoPermission.get());
         stateOperations.addOperation("Show receptionists", () -> showEmployeesByType(Receptionist.class), ReadHospitalInfoPermission.get());
         stateOperations.addOperation("Show doctors", () -> showEmployeesByType(Doctor.class), ReadHospitalInfoPermission.get());
         stateOperations.addOperation("Return to main menu", () -> UILoop.setTransition(Transition.GoToMainMenu), ExitPermission.get());
@@ -40,6 +48,11 @@ public class AdminControl extends UIState {
     private static void showEmployeesByType(Class<? extends Employee> employeeType) {
         var res = Employee.searchEmployeeByType(employeeType);
         res.forEach(employee -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + employee.getClass().getSimpleName() + "; " + employee.getPersonalInfo().toString()));
+    }
+
+    private static void showAllPatients() {
+        var res = Patient.getAllPatients();
+        res.forEach(patient -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + patient.getClass().getSimpleName() + "; " + patient.getPersonalInfo()));
     }
 
 }

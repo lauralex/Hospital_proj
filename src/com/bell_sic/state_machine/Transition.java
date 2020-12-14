@@ -6,5 +6,6 @@ public enum Transition {
     LogOut,
     GoToAdminMenu,
     GoToAddDoctorMenu,
-    GoToAddReceptionistMenu
+    GoToAddReceptionistMenu,
+    GoToAddPatientMenu,
 }

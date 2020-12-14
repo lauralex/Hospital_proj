@@ -1,8 +1,6 @@
 package com.bell_sic.entity.wards;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class WardView {
     private static final Set<Ward> wards = new HashSet<>();
@@ -25,5 +23,11 @@ public class WardView {
 
     public static Optional<Ward> getWardByType(Class<? extends Ward> wardType) {
         return wards.stream().filter(wardType::isInstance).findAny();
+    }
+
+    public static Ward getAnyWard() {
+        var defaultWard = WardView.getWards().stream().findAny();
+        if (defaultWard.isEmpty()) throw new NoSuchElementException("There is no ward!");
+        return Objects.requireNonNull(defaultWard.get(), "Ward cannot be null!");
     }
 }

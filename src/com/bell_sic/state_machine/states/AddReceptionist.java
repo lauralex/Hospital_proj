@@ -6,12 +6,20 @@ import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 
-public class AddReceptionist extends AddEmployee{
+public class AddReceptionist extends AddEmployee {
     public AddReceptionist() {
         super(StateId.AddReceptionistMenu);
 
         addEmployeeUI();
+    }
 
+    @Override
+    public void executeUI() {
+        stateOperations.checkUserInputAndExecute();
+    }
+
+    @Override
+    protected void addToWardOperation() {
         // Apply operation
         stateOperations.addOperation("Apply operation: (add receptionist)",
                 () -> {
@@ -21,10 +29,5 @@ public class AddReceptionist extends AddEmployee{
                     resetData();
                 }, WriteHospitalInfoPermission.get()
         );
-    }
-
-    @Override
-    public void executeUI() {
-        stateOperations.checkUserInputAndExecute();
     }
 }

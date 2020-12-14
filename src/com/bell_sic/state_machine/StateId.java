@@ -7,4 +7,5 @@ public enum StateId {
     AdminMenu,
     AddDoctorMenu,
     AddReceptionistMenu,
+    AddPatientMenu,
 }
