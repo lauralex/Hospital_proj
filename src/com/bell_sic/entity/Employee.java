@@ -9,10 +9,7 @@ import com.bell_sic.entity.wards.WardView;
 
 import java.security.Permissions;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public abstract class Employee {
@@ -45,11 +42,16 @@ public abstract class Employee {
     }
 
     //region ADDITIONAL "EMPLOYEE" SEARCH QUERY FUNCTIONS
-    public static Optional<Ward> getEmployeeWardQuery(Employee employee) {
+    public static Optional<Ward> getEmployeeWardQuery(Employee employee) throws NullPointerException {
         return WardView.getWards().stream().filter(ward -> ward.getEmployees()
                 .contains(Objects.requireNonNull(employee, "Employee cannot be null!"))).findAny();
     }
     //endregion
+
+    public static void reassignEmployeeToWard(Employee employee, Ward ward) throws NullPointerException, NoSuchElementException {
+        getEmployeeWardQuery(Objects.requireNonNull(employee, "Employee cannot be null!")).orElseThrow().getEmployees().remove(employee);
+        ward.addEmployeeToWard(employee);
+    }
 
     /**
      * @param name The name of the employee to search for.
@@ -59,7 +61,7 @@ public abstract class Employee {
     public static List<Employee> searchEmployeeByName(String name) throws NullPointerException {
         var allEmployees = getAllEmployees();
         var results = allEmployees.stream().filter(employee -> (employee.getPersonalInfo().getName()
-                + employee.getPersonalInfo().getLastName()).contains(Objects.requireNonNull(name, "Name cannot be null!")));
+                + " " + employee.getPersonalInfo().getLastName()).contains(Objects.requireNonNull(name, "Name cannot be null!")));
         return results.collect(Collectors.toList());
     }
 

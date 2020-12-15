@@ -41,6 +41,7 @@ public final class UILoop {
         adminMenuState.addTransition(Transition.GoToAddDoctorMenu, StateId.AddDoctorMenu);
         adminMenuState.addTransition(Transition.GoToAddReceptionistMenu, StateId.AddReceptionistMenu);
         adminMenuState.addTransition(Transition.GoToAddPatientMenu, StateId.AddPatientMenu);
+        adminMenuState.addTransition(Transition.GoToModifyEmployeeMenu, StateId.ModifyEmployeeMenu);
 
         UIState addDoctorMenu = new AddDoctor();
         addDoctorMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
@@ -51,12 +52,16 @@ public final class UILoop {
         UIState addPatientMenu = new AddPatient();
         addPatientMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
 
+        UIState modifyEmployeeMenu = new ModifyEmployee();
+        modifyEmployeeMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
+
         fsm.addState(loginState);
         fsm.addState(mainMenuState);
         fsm.addState(adminMenuState);
         fsm.addState(addDoctorMenu);
         fsm.addState(addReceptionistMenu);
         fsm.addState(addPatientMenu);
+        fsm.addState(modifyEmployeeMenu);
 
         while (!toBreak) {
             fsm.getCurrentState().executeUI();

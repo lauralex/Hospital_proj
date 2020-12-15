@@ -48,11 +48,16 @@ public class Patient {
     }
 
     //region ADDITIONAL UTILITY "PATIENT" SEARCH QUERY FUNCTIONS
-    public static Optional<Ward> getPatientWardQuery(Patient patient) {
+    public static Optional<Ward> getPatientWardQuery(Patient patient) throws NullPointerException {
         return WardView.getWards().stream().filter(ward -> ward.getPatients()
                 .contains(Objects.requireNonNull(patient, "Cannot search for null patient!"))).findAny();
     }
     //endregion
+
+    public static void reassignPatientToWard(Patient patient, Ward ward) throws NullPointerException, NoSuchElementException {
+        getPatientWardQuery(Objects.requireNonNull(patient, "Patient cannot be null!")).orElseThrow().getPatients().remove(patient);
+        ward.addPatientToWard(patient);
+    }
 
     public static List<Patient> getAllPatients() {
         return WardView.getWards().stream().map(Ward::getPatients).collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);

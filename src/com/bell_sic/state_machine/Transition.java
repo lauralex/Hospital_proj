@@ -8,4 +8,5 @@ public enum Transition {
     GoToAddDoctorMenu,
     GoToAddReceptionistMenu,
     GoToAddPatientMenu,
+    GoToModifyEmployeeMenu,
 }
