@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class Employee {
@@ -42,6 +43,13 @@ public abstract class Employee {
         return WardView.getWards().stream().map(Ward::getEmployees).collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
 
     }
+
+    //region ADDITIONAL "EMPLOYEE" SEARCH QUERY FUNCTIONS
+    public static Optional<Ward> getEmployeeWardQuery(Employee employee) {
+        return WardView.getWards().stream().filter(ward -> ward.getEmployees()
+                .contains(Objects.requireNonNull(employee, "Employee cannot be null!"))).findAny();
+    }
+    //endregion
 
     /**
      * @param name The name of the employee to search for.

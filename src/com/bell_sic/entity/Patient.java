@@ -4,9 +4,7 @@ import com.bell_sic.entity.wards.Ward;
 import com.bell_sic.entity.wards.WardView;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class Patient {
     PersonalInfo personalInfo;
@@ -48,6 +46,13 @@ public class Patient {
     public Patient(String name, String lastName, LocalDate dateOfBirth, String cityOfBirth) {
         personalInfo = new PersonalInfo(name, lastName, dateOfBirth, cityOfBirth);
     }
+
+    //region ADDITIONAL UTILITY "PATIENT" SEARCH QUERY FUNCTIONS
+    public static Optional<Ward> getPatientWardQuery(Patient patient) {
+        return WardView.getWards().stream().filter(ward -> ward.getPatients()
+                .contains(Objects.requireNonNull(patient, "Cannot search for null patient!"))).findAny();
+    }
+    //endregion
 
     public static List<Patient> getAllPatients() {
         return WardView.getWards().stream().map(Ward::getPatients).collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
