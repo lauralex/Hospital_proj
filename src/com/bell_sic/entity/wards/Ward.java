@@ -11,11 +11,11 @@ public abstract class Ward {
     private final List<Employee> employees = new ArrayList<>();
     private final List<Patient> patients = new ArrayList<>();
 
-    public void addEmployeeToWard(Employee employee) {
+    public void addEmployeeToWard(Employee employee) throws NullPointerException {
         employees.add(Objects.requireNonNull(employee, "Employee cannot be null!"));
     }
 
-    public void addPatientToWard(Patient patient) {
+    public void addPatientToWard(Patient patient) throws NullPointerException {
         patients.add(Objects.requireNonNull(patient, "Patient cannot be null!"));
     }
 

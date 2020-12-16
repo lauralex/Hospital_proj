@@ -5,8 +5,8 @@ import java.util.*;
 public class WardView {
     private static final Set<Ward> wards = new HashSet<>();
 
-    public static void addWard(Ward ward) {
-        wards.add(ward);
+    public static void addWard(Ward ward) throws NullPointerException {
+        wards.add(Objects.requireNonNull(ward, "Ward cannot be null!"));
     }
 
     public static void clearWards() {
@@ -21,11 +21,11 @@ public class WardView {
         return wards;
     }
 
-    public static Optional<Ward> getWardByType(Class<? extends Ward> wardType) {
+    public static Optional<Ward> getWardByType(Class<? extends Ward> wardType) throws NullPointerException {
         return wards.stream().filter(wardType::isInstance).findAny();
     }
 
-    public static Ward getAnyWard() {
+    public static Ward getAnyWard() throws NoSuchElementException, NullPointerException {
         var defaultWard = WardView.getWards().stream().findAny();
         if (defaultWard.isEmpty()) throw new NoSuchElementException("There is no ward!");
         return Objects.requireNonNull(defaultWard.get(), "Ward cannot be null!");

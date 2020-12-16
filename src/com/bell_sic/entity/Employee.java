@@ -4,13 +4,10 @@ import com.bell_sic.entity.permission.Credentials;
 import com.bell_sic.entity.permission.PermissionContainer;
 import com.bell_sic.entity.permission.ReadPermissionInt;
 import com.bell_sic.entity.permission.WritePermissionInt;
-import com.bell_sic.entity.wards.Ward;
-import com.bell_sic.entity.wards.WardView;
 
 import java.security.Permissions;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public abstract class Employee {
     private final Credentials credentials;
@@ -18,7 +15,7 @@ public abstract class Employee {
     private Permissions allowedPermissions = new Permissions();
     private Permissions disallowedPermissions = new Permissions();
 
-    public Employee(String name, String lastName, String userName, String password, LocalDate dateOfBirth, String cityOfBirth) {
+    public Employee(String name, String lastName, String userName, String password, LocalDate dateOfBirth, String cityOfBirth) throws NullPointerException, IllegalArgumentException {
         this.personalInfo = new PersonalInfo(name, lastName, dateOfBirth, cityOfBirth);
         this.credentials = new Credentials(userName, password);
     }
@@ -36,54 +33,7 @@ public abstract class Employee {
     }
 
 
-    public static List<Employee> getAllEmployees() {
-        return WardView.getWards().stream().map(Ward::getEmployees).collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
-
-    }
-
-    //region ADDITIONAL "EMPLOYEE" SEARCH QUERY FUNCTIONS
-    public static Optional<Ward> getEmployeeWardQuery(Employee employee) throws NullPointerException {
-        return WardView.getWards().stream().filter(ward -> ward.getEmployees()
-                .contains(Objects.requireNonNull(employee, "Employee cannot be null!"))).findAny();
-    }
     //endregion
-
-    public static void reassignEmployeeToWard(Employee employee, Ward ward) throws NullPointerException, NoSuchElementException {
-        getEmployeeWardQuery(Objects.requireNonNull(employee, "Employee cannot be null!")).orElseThrow().getEmployees().remove(employee);
-        ward.addEmployeeToWard(employee);
-    }
-
-    /**
-     * @param name The name of the employee to search for.
-     * @return A list of found employees with the given {@code name}.
-     * @throws NullPointerException If {@code name} is {@code null}.
-     */
-    public static List<Employee> searchEmployeeByName(String name) throws NullPointerException {
-        var allEmployees = getAllEmployees();
-        var results = allEmployees.stream().filter(employee -> (employee.getPersonalInfo().getName()
-                + " " + employee.getPersonalInfo().getLastName()).contains(Objects.requireNonNull(name, "Name cannot be null!")));
-        return results.collect(Collectors.toList());
-    }
-
-    /**
-     * @param type The employee category as a class-type.
-     * @return A list of found employees.
-     * @throws NullPointerException If {@code type} is {@code null}.
-     */
-    public static List<Employee> searchEmployeeByType(Class<? extends Employee> type) throws NullPointerException {
-        var allEmployees = getAllEmployees();
-        var results = allEmployees.stream().filter(type::isInstance);
-        return results.collect(Collectors.toList());
-    }
-
-    /**
-     * @param employee Remove the employee from the list.
-     * @return True, if the employee was removed successfully.
-     * @throws NullPointerException When {@code employee} is {@code null}.
-     */
-    public static boolean removeEmployee(Employee employee) throws NullPointerException {
-        return WardView.getWards().stream().anyMatch(ward -> ward.getEmployees().remove(Objects.requireNonNull(employee)));
-    }
 
     public Permissions getAllowedPermissions() {
         return allowedPermissions;

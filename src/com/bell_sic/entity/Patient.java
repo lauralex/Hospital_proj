@@ -1,10 +1,8 @@
 package com.bell_sic.entity;
 
-import com.bell_sic.entity.wards.Ward;
-import com.bell_sic.entity.wards.WardView;
-
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Date;
+import java.util.Objects;
 
 public class Patient {
     PersonalInfo personalInfo;
@@ -16,10 +14,10 @@ public class Patient {
     }
 
     public void setPersonalInfo(PersonalInfo personalInfo) {
-        this.personalInfo = personalInfo;
+        this.personalInfo = Objects.requireNonNull(personalInfo, "personal info cannot be null!");
     }
 
-    public void setPersonalInfo(String name, String lastName, LocalDate dateOfBirth, String cityOfBirth) {
+    public void setPersonalInfo(String name, String lastName, LocalDate dateOfBirth, String cityOfBirth) throws NullPointerException, IllegalArgumentException {
         personalInfo = new PersonalInfo(name, lastName, dateOfBirth, cityOfBirth);
     }
 
@@ -27,7 +25,10 @@ public class Patient {
         return diagnosis;
     }
 
-    public void setDiagnosis(String diagnosis) {
+    public void setDiagnosis(String diagnosis) throws NullPointerException, IllegalArgumentException {
+        if (diagnosis.isBlank()) {
+            throw new IllegalArgumentException("Diagnosis cannot be empty!");
+        }
         this.diagnosis = diagnosis;
     }
 
@@ -36,30 +37,17 @@ public class Patient {
     }
 
     public void setDateOfAppointment(Date dateOfAppointment) {
-        this.dateOfAppointment = dateOfAppointment;
+        this.dateOfAppointment = Objects.requireNonNull(dateOfAppointment, "Date cannot be null!");
     }
 
-    public Patient(PersonalInfo personalInfo) {
-        this.personalInfo = personalInfo;
+    public Patient(PersonalInfo personalInfo) throws NullPointerException {
+        this.personalInfo = Objects.requireNonNull(personalInfo, "personal info cannot be null!");
     }
 
-    public Patient(String name, String lastName, LocalDate dateOfBirth, String cityOfBirth) {
+    public Patient(String name, String lastName, LocalDate dateOfBirth, String cityOfBirth) throws NullPointerException, IllegalArgumentException {
         personalInfo = new PersonalInfo(name, lastName, dateOfBirth, cityOfBirth);
     }
 
-    //region ADDITIONAL UTILITY "PATIENT" SEARCH QUERY FUNCTIONS
-    public static Optional<Ward> getPatientWardQuery(Patient patient) throws NullPointerException {
-        return WardView.getWards().stream().filter(ward -> ward.getPatients()
-                .contains(Objects.requireNonNull(patient, "Cannot search for null patient!"))).findAny();
-    }
     //endregion
 
-    public static void reassignPatientToWard(Patient patient, Ward ward) throws NullPointerException, NoSuchElementException {
-        getPatientWardQuery(Objects.requireNonNull(patient, "Patient cannot be null!")).orElseThrow().getPatients().remove(patient);
-        ward.addPatientToWard(patient);
-    }
-
-    public static List<Patient> getAllPatients() {
-        return WardView.getWards().stream().map(Ward::getPatients).collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
-    }
 }

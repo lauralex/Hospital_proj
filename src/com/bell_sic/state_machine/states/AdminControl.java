@@ -1,10 +1,7 @@
 package com.bell_sic.state_machine.states;
 
 import com.bell_sic.UILoop;
-import com.bell_sic.entity.Doctor;
-import com.bell_sic.entity.Employee;
-import com.bell_sic.entity.Patient;
-import com.bell_sic.entity.Receptionist;
+import com.bell_sic.entity.*;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.LogoutPermission;
 import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
@@ -37,18 +34,18 @@ public class AdminControl extends UIState {
     }
 
     private static void showAllEmployees() {
-        var res = Employee.getAllEmployees();
-        res.forEach(employee -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + employee.getClass().getSimpleName() + "; WARD: " + Employee.getEmployeeWardQuery(employee).orElseThrow() + "; " + employee.getPersonalInfo().toString()));
+        var res = EmployeeView.getAllEmployees();
+        res.forEach(employee -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + employee.getClass().getSimpleName() + "; WARD: " + EmployeeView.getEmployeeWardQuery(employee).orElseThrow() + "; " + employee.getPersonalInfo().toString()));
     }
 
     private static void showEmployeesByType(Class<? extends Employee> employeeType) {
-        var res = Employee.searchEmployeeByType(employeeType);
-        res.forEach(employee -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + employee.getClass().getSimpleName() + "; WARD: " + Employee.getEmployeeWardQuery(employee).orElseThrow() + "; " + employee.getPersonalInfo().toString()));
+        var res = EmployeeView.searchEmployeeByType(employeeType);
+        res.forEach(employee -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + employee.getClass().getSimpleName() + "; WARD: " + EmployeeView.getEmployeeWardQuery(employee).orElseThrow() + "; " + employee.getPersonalInfo().toString()));
     }
 
     private static void showAllPatients() {
-        var res = Patient.getAllPatients();
-        res.forEach(patient -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + patient.getClass().getSimpleName() + "; WARD: " + Patient.getPatientWardQuery(patient).orElseThrow() + "; " + patient.getPersonalInfo()));
+        var res = PatientView.getAllPatients();
+        res.forEach(patient -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + patient.getClass().getSimpleName() + "; WARD: " + PatientView.getPatientWardQuery(patient).orElseThrow() + "; " + patient.getPersonalInfo()));
     }
 
 }
