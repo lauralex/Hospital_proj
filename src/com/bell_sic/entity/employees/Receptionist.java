@@ -1,5 +1,6 @@
-package com.bell_sic.entity;
+package com.bell_sic.entity.employees;
 
+import com.bell_sic.entity.PersonalInfo;
 import com.bell_sic.entity.permission.Credentials;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.LogoutPermission;
@@ -19,7 +20,7 @@ public class Receptionist extends Employee {
         addPermission(ManagePatientInfoPermission.get());
     }
 
-    public static Builder builder(PersonalInfo personalInfo, Credentials credentials) {
+    public static EmployeeBuilder builder(PersonalInfo personalInfo, Credentials credentials) {
         return new EmployeeBuilderAdapter() {
             @Override
             public Employee build() {

@@ -1,6 +1,6 @@
 package com.bell_sic.state_machine;
 
-import com.bell_sic.entity.Employee;
+import com.bell_sic.entity.employees.Employee;
 
 public class SessionManager {
     private static Employee currentUser;

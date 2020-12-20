@@ -1,8 +1,8 @@
 package com.bell_sic.state_machine.states;
 
 import com.bell_sic.UILoop;
-import com.bell_sic.entity.Employee;
-import com.bell_sic.entity.EmployeeView;
+import com.bell_sic.entity.employees.Employee;
+import com.bell_sic.entity.employees.EmployeeView;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.state_machine.Transition;

@@ -1,6 +1,6 @@
 package com.bell_sic.entity.wards;
 
-import com.bell_sic.entity.Employee;
+import com.bell_sic.entity.employees.Employee;
 import com.bell_sic.entity.Patient;
 
 import java.util.ArrayList;

@@ -2,6 +2,10 @@ package com.bell_sic.state_machine.states;
 
 import com.bell_sic.UILoop;
 import com.bell_sic.entity.*;
+import com.bell_sic.entity.employees.Doctor;
+import com.bell_sic.entity.employees.Employee;
+import com.bell_sic.entity.employees.EmployeeView;
+import com.bell_sic.entity.employees.Receptionist;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.LogoutPermission;
 import com.bell_sic.entity.permission.ReadHospitalInfoPermission;

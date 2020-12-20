@@ -1,4 +1,4 @@
-package com.bell_sic.entity;
+package com.bell_sic.entity.employees;
 
 import com.bell_sic.entity.wards.Ward;
 import com.bell_sic.entity.wards.WardView;
@@ -12,7 +12,6 @@ public class EmployeeView {
 
     }
 
-    //region ADDITIONAL "EMPLOYEE" SEARCH QUERY FUNCTIONS
     public static Optional<Ward> getEmployeeWardQuery(Employee employee) throws NullPointerException {
         return WardView.getWards().stream().filter(ward -> ward.getEmployees()
                 .contains(Objects.requireNonNull(employee, "Employee cannot be null!"))).findAny();

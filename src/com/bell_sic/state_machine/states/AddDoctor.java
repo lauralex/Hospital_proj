@@ -1,6 +1,6 @@
 package com.bell_sic.state_machine.states;
 
-import com.bell_sic.entity.Doctor;
+import com.bell_sic.entity.employees.Doctor;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.LogoutPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;

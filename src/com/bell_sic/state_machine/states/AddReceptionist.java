@@ -1,6 +1,6 @@
 package com.bell_sic.state_machine.states;
 
-import com.bell_sic.entity.Receptionist;
+import com.bell_sic.entity.employees.Receptionist;
 import com.bell_sic.entity.permission.ManagePatientInfoPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
 import com.bell_sic.state_machine.StateId;
