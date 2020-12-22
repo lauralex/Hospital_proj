@@ -12,10 +12,17 @@ public class Appointment {
         this.operation = Objects.requireNonNull(operation, "Operation cannot be nuLL!");
     }
 
+    /**
+     * @return The {@linkplain Date} of the appointment.
+     */
     public Date getDateOfAppointment() {
         return dateOfAppointment;
     }
 
+    /**
+     * @param dateOfAppointment The {@linkplain Date} you want to set.
+     * @throws NullPointerException
+     */
     public void setDateOfAppointment(Date dateOfAppointment) throws NullPointerException {
         this.dateOfAppointment = Objects.requireNonNull(dateOfAppointment, "Date of appointment cannot be null!");
     }

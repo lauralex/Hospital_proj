@@ -12,7 +12,7 @@ public class Credentials {
      * @throws NullPointerException If either {@code userName} or {@code password} are {@code null}.
      */
     public Credentials(String userName, String password) throws NullPointerException {
-        this.userName = Objects.requireNonNull(userName, "Username cannot be null!");
+        this.userName = Objects.requireNonNull(userName, "Username cannot be null!").trim();
         this.password = Objects.requireNonNull(password, "Password cannot be null!");
     }
 
@@ -35,7 +35,7 @@ public class Credentials {
      */
     public void setUserName(String userName) throws NullPointerException, IllegalArgumentException {
         if (userName.isBlank()) throw new IllegalArgumentException("Username cannot be empty!");
-        this.userName = userName;
+        this.userName = userName.trim();
     }
 
     public String getPassword() {

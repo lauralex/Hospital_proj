@@ -31,10 +31,22 @@ public class Patient {
         return personalInfo;
     }
 
-    public void setPersonalInfo(PersonalInfo personalInfo) {
+    /**
+     * @param personalInfo The {@linkplain PersonalInfo} you want to set for the patient.
+     * @throws NullPointerException If {@code personalInfo} is {@code null}.
+     */
+    public void setPersonalInfo(PersonalInfo personalInfo) throws NullPointerException {
         this.personalInfo = Objects.requireNonNull(personalInfo, "personal info cannot be null!");
     }
 
+    /**
+     * @param name The name you want to set for the patient.
+     * @param lastName The last name you want to set for the patient.
+     * @param dateOfBirth The date of birth you want to set for the patient.
+     * @param cityOfBirth The city of birth you want to set for the patient.
+     * @throws NullPointerException If any of the arguments is {@code null}.
+     * @throws IllegalArgumentException If {@code name} or {@code lastName} or {@code cityOfBirth} are {@code null}.
+     */
     public void setPersonalInfo(String name, String lastName, LocalDate dateOfBirth, String cityOfBirth) throws NullPointerException, IllegalArgumentException {
         personalInfo = new PersonalInfo(name, lastName, dateOfBirth, cityOfBirth);
     }
@@ -50,30 +62,19 @@ public class Patient {
         this.diagnosis = diagnosis;
     }
 
+    /**
+     * @return The current {@linkplain Appointment} set for the patient.
+     */
     public Appointment getAppointment() {
         return appointment;
     }
 
+    /**
+     * @param appointment The {@linkplain Appointment} you want to set for the patient.
+     *                    Can be {@code null} if it can't be specified at the moment.
+     */
     public void setAppointment(Appointment appointment) {
         this.appointment = appointment;
     }
 
-    public interface PatientBuilder {
-        PatientBuilder setAppointment(Appointment appointment);
-        Patient build();
-    }
-
-    public abstract static class PatientBuilderAdapter implements PatientBuilder {
-        private Appointment appointment;
-
-        @Override
-        public PatientBuilder setAppointment(Appointment appointment) throws NullPointerException {
-            this.appointment = Objects.requireNonNull(appointment, "Appointment cannot be null!");
-            return this;
-        }
-
-        protected Appointment getAppointment() {
-            return appointment;
-        }
-    }
 }
