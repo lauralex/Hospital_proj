@@ -1,3 +1,10 @@
 language: java
 jdk:
   - openjdk15
+
+deploy:
+  provider: releases
+  file: target/Hospital-Project-1.0-SNAPSHOT.jar
+  edge: true
+  on:
+    tags: true
