@@ -4,6 +4,7 @@ jdk:
 
 deploy:
   provider: releases
+  token: RELEASES_TOKEN
   file: target/Hospital-Project-1.0-SNAPSHOT.jar
   edge: true
   on:
