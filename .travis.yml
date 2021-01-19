@@ -2,8 +2,9 @@ language: java
 jdk:
   - openjdk15
 
-before_script:
+before_deploy:
   - mvn versions:set -DnewVersion=$TRAVIS_TAG
+  - mvn package -Dmaven.test.skip=true
 deploy:
   provider: releases
   file: target/Hospital-Project-${TRAVIS_TAG}.jar
