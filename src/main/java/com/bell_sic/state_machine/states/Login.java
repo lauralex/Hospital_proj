@@ -48,6 +48,11 @@ public class Login extends UIState {
         }
     }
 
+    /**
+     * This method checks if the passed {@link Credentials} belong to any employee in the EmployeeView.
+     * @param credentials The {@linkplain Credentials} to be checked.
+     * @return {@code True} if the {@code credentials} are valid. {@code False} otherwise.
+     */
     private boolean checkCredentials(Credentials credentials) {
         if (firstInit) {
             var admin = Admin.builder(new PersonalInfo("alex", "bell",

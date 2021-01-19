@@ -16,6 +16,11 @@ public abstract class UIState {
         return currentStateId;
     }
 
+    /**
+     * Add a {@code transition} from the current UIState to the UIState with the specified {@code stateId}.
+     * @param transition The {@linkplain Transition} from the current {@code UIState} instance.
+     * @param stateId The final {@linkplain StateId}.
+     */
     public void addTransition(Transition transition, StateId stateId) {
         if (transition == Transition.NullTransition) {
             System.out.println("Error, Null State Transition!");
@@ -48,12 +53,25 @@ public abstract class UIState {
         return map.getOrDefault(transition, StateId.NullStateId);
     }
 
+    /**
+     * Set additional options for the entrant state.
+     * @param options Additional {@code options} for the entrant state.
+     */
     public void doBeforeEntering(Object options) {
+        // DEFAULT BEHAVIOUR: DO NOTHING!
     }
 
+    /**
+     * Set additional options for the leaving state.
+     * @param options Additional {@code options} for the leaving state.
+     */
     public void doBeforeLeaving(Object options) {
+        // DEFAULT BEHAVIOUR: DO NOTHING!
     }
 
+    /**
+     * This method represents the main {@code UIState} execution routine.
+     */
     public abstract void executeUI();
 
 }

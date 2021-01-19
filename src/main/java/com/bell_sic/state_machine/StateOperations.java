@@ -1,5 +1,6 @@
 package com.bell_sic.state_machine;
 
+import com.bell_sic.entity.employees.Employee;
 import com.bell_sic.entity.permission.PermissionContainer;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 import com.bell_sic.utility.ConsoleLineReader;
@@ -15,6 +16,11 @@ import java.util.stream.Collectors;
 public class StateOperations {
     private final Operations operations = new Operations();
 
+    /**
+     * Display to the console-output the {@code permissibleOperations} for the logged-in user.
+     * @param permissibleOperations The {@linkplain Operations} to display to the console-output.
+     * @throws NullPointerException If {@code permissibleOperations} is {@code null}.
+     */
     public void checkUserInputAndExecute(Operations permissibleOperations) throws NullPointerException {
         var opLength = permissibleOperations.size();
 
@@ -47,16 +53,33 @@ public class StateOperations {
         }
     }
 
+    /**
+     * Display to the console-output the permissible {@link Operations} retrieved with the {@code getPermissibleOperations()} method.
+     */
     public void checkUserInputAndExecute() {
         checkUserInputAndExecute(getPermissibleOperations());
     }
 
+    /**
+     * Add a new operation.
+     * @param operationString Brief primary description.
+     * @param operationAction A {@linkplain Runnable} representing the method to be executed.
+     * @param permission A subclass of {@linkplain PermissionContainer} representing the permission required for the operation.
+     * @throws NullPointerException
+     */
     public void addOperation(CharSequence operationString, Runnable operationAction, PermissionContainer permission) throws NullPointerException {
         operations.add(new Pair<>(
                 new Pair<>(new Pair<>(operationString.toString(), ""), operationAction), permission)
         );
     }
 
+    /**
+     * @param operationString Brief primary description.
+     * @param second Brief secondary description.
+     * @param operationAction A {@linkplain Runnable} representing the method to be executed.
+     * @param permission A subclass of {@linkplain PermissionContainer} representing the permission required for the operation.
+     * @throws NullPointerException
+     */
     public void addOperation(CharSequence operationString, CharSequence second, Runnable operationAction, PermissionContainer permission) throws NullPointerException {
         operations.add(new Pair<>(
                 new Pair<>(new Pair<>(operationString.toString(), second.toString()), operationAction), permission)
@@ -92,10 +115,18 @@ public class StateOperations {
         operations.clear();
     }
 
+    /**
+     * @return The {@linkplain Operations} with all the operations.
+     */
     public Operations getOperations() {
         return operations;
     }
 
+    /**
+     * @return Permissible {@linkplain Operations}, according to the permissions of the logged-in user.
+     * @see PermissionContainer
+     * @see Employee
+     */
     public Operations getPermissibleOperations() {
 
         return operations.stream().filter(operation -> SessionManager.getCurrentUser().checkPermission(operation.second())).collect(Collectors.toCollection(Operations::new));
