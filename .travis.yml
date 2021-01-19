@@ -2,9 +2,11 @@ language: java
 jdk:
   - openjdk15
 
+before_script:
+  - mvn versions:set -DnewVersion=$TRAVIS_TAG
 deploy:
   provider: releases
-  file: target/Hospital-Project-1.0-SNAPSHOT.jar
+  file: target/Hospital-Project-${TRAVIS_TAG}.jar
   edge: true
   on:
     tags: true
