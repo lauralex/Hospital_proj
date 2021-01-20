@@ -1,8 +1,8 @@
 package com.bell_sic.state_machine.states;
 
 import com.bell_sic.UILoop;
+import com.bell_sic.entity.Hospital;
 import com.bell_sic.entity.employees.Employee;
-import com.bell_sic.entity.employees.EmployeeView;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.state_machine.Transition;
@@ -36,14 +36,14 @@ public class ModifyEmployee extends UIState {
         }
         if (enteredName.isBlank()) throw new IllegalArgumentException("Name cannot be blank!");
 
-        var res = EmployeeView.searchEmployeeByName(enteredName);
+        var res = Hospital.EmployeeView.searchEmployeeByName(enteredName);
         if (res.isEmpty()) {
             ConsoleColoredPrinter.println("No employee found!");
             return;
         }
         selectedEmployee = res.get(0);
         stateOperations.modifyOperationString("search", "TYPE: " + selectedEmployee.getClass().getSimpleName() +
-                 " WARD: " + EmployeeView.getEmployeeWardQuery(selectedEmployee).orElseThrow() + " " + selectedEmployee.getPersonalInfo());
+                 " WARD: " + Hospital.EmployeeView.getEmployeeWardQuery(selectedEmployee).orElseThrow() + " " + selectedEmployee.getPersonalInfo());
     }
 
     private void reassignSelectedEmployeeRoutine() {

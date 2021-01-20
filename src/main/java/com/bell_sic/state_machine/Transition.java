@@ -12,4 +12,7 @@ public enum Transition {
     GoToAddReceptionistMenu,
     GoToAddPatientMenu,
     GoToModifyEmployeeMenu,
+    GoToAppointmentRegistrationMenu,
+    GoToAddOperationMenu,
+    GoToReplaceDoctorMenu,
 }

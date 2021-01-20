@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public class Patient {
     private PersonalInfo personalInfo;
-    private String diagnosis;
-    private Appointment appointment;
+    private String diagnosis; // TODO to evaluate (?)
+    private Appointment appointment; // TODO to delete
 
     /**
      * Construct a new {@code Patient} using {@link PersonalInfo}.
@@ -41,7 +41,7 @@ public class Patient {
             @Override
             public Patient build() {
                 var patient = new Patient(personalInfo);
-                patient.setAppointment(getAppointment());
+                patient.setAppointment(getAppointment()); // TODO to delete
                 return patient;
             }
         };
@@ -76,10 +76,12 @@ public class Patient {
     }
 
     public String getDiagnosis() {
+        // TODO to evaluate (?)
         return diagnosis;
     }
 
     public void setDiagnosis(String diagnosis) throws NullPointerException, IllegalArgumentException {
+        // TODO to evaluate (?)
         if (diagnosis.isBlank()) {
             throw new IllegalArgumentException("Diagnosis cannot be empty!");
         }
@@ -90,6 +92,7 @@ public class Patient {
      * @return The current {@linkplain Appointment} set for the patient.
      */
     public Appointment getAppointment() {
+        // TODO to delete
         return appointment;
     }
 
@@ -98,6 +101,7 @@ public class Patient {
      *                    Can be {@code null} if it can't be specified at the moment.
      */
     public void setAppointment(Appointment appointment) {
+        // TODO to delete
         this.appointment = appointment;
     }
 

@@ -12,4 +12,7 @@ public enum StateId {
     AddReceptionistMenu,
     AddPatientMenu,
     ModifyEmployeeMenu,
+    AppointmentRegistrationMenu,
+    AddOperationMenu,
+    ReplaceDoctorMenu,
 }

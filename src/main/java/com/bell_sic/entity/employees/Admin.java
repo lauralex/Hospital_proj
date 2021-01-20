@@ -12,6 +12,10 @@ public class Admin extends Employee {
 
     public Admin(PersonalInfo personalInfo, Credentials credentials) {
         super(personalInfo, credentials);
+    }
+
+    @Override
+    protected void setDefaultPermissions() {
         addPermission(ReadHospitalInfoPermission.get());
         addPermission(WriteHospitalInfoPermission.get());
         addPermission(ExitPermission.get());

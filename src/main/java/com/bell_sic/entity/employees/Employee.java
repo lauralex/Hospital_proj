@@ -1,13 +1,14 @@
 package com.bell_sic.entity.employees;
 
 import com.bell_sic.entity.PersonalInfo;
-import com.bell_sic.entity.permission.Credentials;
-import com.bell_sic.entity.permission.PermissionContainer;
-import com.bell_sic.entity.permission.ReadPermissionInt;
-import com.bell_sic.entity.permission.WritePermissionInt;
+import com.bell_sic.entity.permission.*;
+import com.bell_sic.state_machine.StateOperations;
+import com.bell_sic.utility.Pair;
 
 import java.security.Permissions;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public abstract class Employee {
@@ -20,6 +21,7 @@ public abstract class Employee {
                     String cityOfBirth) throws NullPointerException, IllegalArgumentException {
         this.personalInfo = new PersonalInfo(name, lastName, dateOfBirth, cityOfBirth);
         this.credentials = new Credentials(userName, password);
+        setDefaultPermissions();
     }
 
     /**
@@ -32,6 +34,7 @@ public abstract class Employee {
     public Employee(PersonalInfo personalInfo, Credentials credentials) throws NullPointerException {
         this.personalInfo = Objects.requireNonNull(personalInfo, "Personal info cannot be null!");
         this.credentials = Objects.requireNonNull(credentials, "Credentials cannot be null!");
+        setDefaultPermissions();
     }
 
     public Permissions getAllowedPermissions() {
@@ -87,6 +90,11 @@ public abstract class Employee {
         disallowedPermissions.add(permission);
     }
 
+    protected void setDefaultPermissions() {
+        addPermission(ExitPermission.get());
+        addPermission(LogoutPermission.get());
+    }
+
     public PersonalInfo getPersonalInfo() {
         return personalInfo;
     }
@@ -105,6 +113,10 @@ public abstract class Employee {
      */
     public void setDisallowedPermissions(Permissions disallowedPermissions) throws NullPointerException {
         this.disallowedPermissions = Objects.requireNonNull(disallowedPermissions);
+    }
+
+    public StateOperations getSpecificOperations() {
+        return null;
     }
 
 }

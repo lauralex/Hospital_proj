@@ -1,12 +1,12 @@
 package com.bell_sic.state_machine.states;
 
 import com.bell_sic.UILoop;
+import com.bell_sic.entity.Hospital;
 import com.bell_sic.entity.PersonalInfo;
 import com.bell_sic.entity.permission.Credentials;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
 import com.bell_sic.entity.wards.Ward;
-import com.bell_sic.entity.wards.WardView;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.state_machine.StateOperations;
 import com.bell_sic.state_machine.Transition;
@@ -38,7 +38,7 @@ public abstract class AddEmployee extends UIState {
     }
 
     private static Ward getDefaultWard() {
-        return WardView.getAnyWard();
+        return Hospital.WardView.getAnyWard();
     }
 
     protected void modifyPersonalInfo() {
@@ -159,7 +159,7 @@ public abstract class AddEmployee extends UIState {
     protected void modifyWard() {
         StateOperations operations = new StateOperations();
         for (var ward :
-                WardView.getWards()) {
+                Hospital.WardView.getWards()) {
             operations.addOperation(ward.toString(), () -> {
                 this.ward = ward;
                 updateOperationStrings();

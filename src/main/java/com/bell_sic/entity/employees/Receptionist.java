@@ -15,6 +15,10 @@ public class Receptionist extends Employee {
 
     public Receptionist(PersonalInfo personalInfo, Credentials credentials) {
         super(personalInfo, credentials);
+    }
+
+    @Override
+    protected void setDefaultPermissions() {
         addPermission(ExitPermission.get());
         addPermission(LogoutPermission.get());
         addPermission(ManagePatientInfoPermission.get());

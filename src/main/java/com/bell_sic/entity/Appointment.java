@@ -6,16 +6,21 @@ import java.util.Objects;
 public class Appointment {
     private Date dateOfAppointment;
     private Operation operation;
+    private Patient patient;
+    private AppointmentState appointmentState;
 
     /**
      * Construct a new {@link Appointment}.
      * @param dateOfAppointment The {@linkplain Date} of the {@code appointment}.
      * @param operation The {@linkplain Operation} of the {@code appointment}.
+     * @param patient The {@linkplain Patient} associated with the {@code appointment}.
      * @throws NullPointerException If either {@code dateOfAppointment} or {@code operation} are {@code null}.
      */
-    public Appointment(Date dateOfAppointment, Operation operation) throws NullPointerException {
+    public Appointment(Date dateOfAppointment, Operation operation, Patient patient) throws NullPointerException {
         this.dateOfAppointment = Objects.requireNonNull(dateOfAppointment, "Date of appointment cannot be null!");
         this.operation = Objects.requireNonNull(operation, "Operation cannot be nuLL!");
+        this.patient = Objects.requireNonNull(patient, "Patient cannot be null!");
+        this.appointmentState = AppointmentState.PENDING;
     }
 
     /**
@@ -49,5 +54,21 @@ public class Appointment {
      */
     public void setOperation(Operation operation) throws NullPointerException {
         this.operation = Objects.requireNonNull(operation, "Operation cannot be nulL!");
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) throws NullPointerException {
+        this.patient = Objects.requireNonNull(patient, "Patient cannot be null!");
+    }
+
+    public AppointmentState getAppointmentState() {
+        return appointmentState;
+    }
+
+    public void setAppointmentState(AppointmentState appointmentState) throws NullPointerException {
+        this.appointmentState = Objects.requireNonNull(appointmentState, "AppointmentState cannot be null!");
     }
 }

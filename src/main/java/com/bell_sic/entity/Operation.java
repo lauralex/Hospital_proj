@@ -1,10 +1,17 @@
 package com.bell_sic.entity;
 
+import com.bell_sic.entity.wards.Ward;
+
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class Operation {
     private final String description;
     private final OperationType operationType;
+    private final List<Period> possibleRehabilitationDurations = new ArrayList<>();
 
     /**
      * @param description A brief description of the operation.
@@ -34,5 +41,22 @@ public class Operation {
      */
     public OperationType getOperationType() {
         return operationType;
+    }
+
+    public List<Period> getPossibleRehabilitationDurations() {
+        return Collections.unmodifiableList(possibleRehabilitationDurations);
+    }
+
+    public void addPossibleDuration(Period period) throws NullPointerException {
+        possibleRehabilitationDurations.add(Objects.requireNonNull(period, "Period cannot be null!"));
+    }
+
+    public boolean removePossibleDuration(Period period) throws NullPointerException {
+        return possibleRehabilitationDurations.remove(Objects.requireNonNull(period, "Period cannot be null!"));
+    }
+
+    public Ward getWard() {
+        throw new UnsupportedOperationException();
+        // TODO to implement
     }
 }

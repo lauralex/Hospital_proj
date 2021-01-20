@@ -1,7 +1,7 @@
 package com.bell_sic;
 
+import com.bell_sic.entity.Hospital;
 import com.bell_sic.entity.wards.Ward;
-import com.bell_sic.entity.wards.WardView;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.state_machine.StateMachineSystem;
 import com.bell_sic.state_machine.Transition;
@@ -21,7 +21,7 @@ public final class UILoop {
         for (var subtype :
                 res) {
             try {
-                WardView.addWard(subtype.getDeclaredConstructor().newInstance());
+                Hospital.WardView.addWard(subtype.getDeclaredConstructor().newInstance());
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 e.printStackTrace();
                 return;
@@ -42,6 +42,9 @@ public final class UILoop {
         adminMenuState.addTransition(Transition.GoToAddReceptionistMenu, StateId.AddReceptionistMenu);
         adminMenuState.addTransition(Transition.GoToAddPatientMenu, StateId.AddPatientMenu);
         adminMenuState.addTransition(Transition.GoToModifyEmployeeMenu, StateId.ModifyEmployeeMenu);
+        adminMenuState.addTransition(Transition.GoToAppointmentRegistrationMenu, StateId.AppointmentRegistrationMenu);
+        adminMenuState.addTransition(Transition.GoToAddOperationMenu, StateId.AddOperationMenu);
+        adminMenuState.addTransition(Transition.GoToReplaceDoctorMenu, StateId.ReplaceDoctorMenu);
 
         UIState addDoctorMenu = new AddDoctor();
         addDoctorMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
@@ -55,6 +58,15 @@ public final class UILoop {
         UIState modifyEmployeeMenu = new ModifyEmployee();
         modifyEmployeeMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
 
+        UIState appointmentRegistrationMenu = new AppointmentRegistrationMenu();
+        appointmentRegistrationMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
+
+        UIState addOperationMenu = new AddOperationMenu();
+        addOperationMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
+
+        UIState replaceDoctorMenu = new DoctorMigrationMenu();
+        replaceDoctorMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
+
         fsm.addState(loginState);
         fsm.addState(mainMenuState);
         fsm.addState(adminMenuState);
@@ -62,6 +74,9 @@ public final class UILoop {
         fsm.addState(addReceptionistMenu);
         fsm.addState(addPatientMenu);
         fsm.addState(modifyEmployeeMenu);
+        fsm.addState(appointmentRegistrationMenu);
+        fsm.addState(addOperationMenu);
+        fsm.addState(replaceDoctorMenu);
 
         while (!toBreak) {
             fsm.getCurrentState().executeUI();
