@@ -5,16 +5,14 @@ import com.bell_sic.entity.Patient;
 import com.bell_sic.entity.employees.Employee;
 import com.bell_sic.entity.wards.rooms.Room;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public abstract class Ward {
+    // TODO change all these fields to "Set" instead of "List" (no duplicates allowed)
     private final List<Employee> employees = new ArrayList<>();
     private final List<Patient> patients = new ArrayList<>();
     private final List<Room> rooms = new ArrayList<>();
-    private final List<Operation> operations = new ArrayList<>();
+    private final Set<Operation> operations = new HashSet<>();
 
     public void addEmployeeToWard(Employee employee) throws NullPointerException {
         employees.add(Objects.requireNonNull(employee, "Employee cannot be null!"));
@@ -38,7 +36,9 @@ public abstract class Ward {
 
 
 
-    public abstract String toString();
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 
     public List<Room> getRooms() {
         return Collections.unmodifiableList(rooms);
@@ -52,12 +52,23 @@ public abstract class Ward {
         return rooms.remove(Objects.requireNonNull(room, "Room cannot be null"));
     }
 
-    public List<Operation> getOperations() {
-        return Collections.unmodifiableList(operations);
+    public Set<Operation> getOperations() {
+        return Collections.unmodifiableSet(operations);
     }
 
-    public void addOperation(Operation operation) throws NullPointerException {
-        operations.add(Objects.requireNonNull(operation, "Operation cannot be null!"));
+    /**
+     * @param operation The {@linkplain Operation} to add to the ward.
+     * @throws NullPointerException If {@code operation} is {@code null}.
+     * @throws IllegalStateException If {@code operation} already exists in the current ward.
+     * @throws IllegalArgumentException If {@code operation} has not enough durations.
+     */
+    public void addOperation(Operation operation) throws NullPointerException, IllegalStateException, IllegalArgumentException {
+        if (operation.getPossibleRehabilitationDurations().size() == 0) {
+            throw new IllegalArgumentException("There must be at least ONE rehabilitation duration!");
+        }
+        if (!operations.add(operation)) {
+            throw new IllegalStateException("Duplicate operation!");
+        }
     }
 
     public boolean removeOperation(Operation operation) throws NullPointerException {
