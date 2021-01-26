@@ -1,20 +1,27 @@
 package com.bell_sic.entity.wards;
 
+import com.bell_sic.entity.Hospital;
 import com.bell_sic.entity.Operation;
 import com.bell_sic.entity.Patient;
 import com.bell_sic.entity.employees.Employee;
 import com.bell_sic.entity.wards.rooms.Room;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 public abstract class Ward {
     // TODO change all these fields to "Set" instead of "List" (no duplicates allowed)
-    private final List<Employee> employees = new ArrayList<>();
-    private final List<Patient> patients = new ArrayList<>();
-    private final List<Room> rooms = new ArrayList<>();
+    private final Set<Employee> employees = new HashSet<>();
+    private final Set<Patient> patients = new HashSet<>();
+    private final Set<Room> rooms = new HashSet<>();
     private final Set<Operation> operations = new HashSet<>();
 
-    public void addEmployeeToWard(Employee employee) throws NullPointerException {
+    public void addEmployeeToWard(Employee employee) throws NullPointerException, IllegalStateException {
+        if (Hospital.EmployeeView.containsEmployee(employee)) {
+            throw new IllegalStateException("Duplicate employee!");
+        }
         employees.add(Objects.requireNonNull(employee, "Employee cannot be null!"));
     }
 
@@ -26,11 +33,11 @@ public abstract class Ward {
         patients.add(Objects.requireNonNull(patient, "Patient cannot be null!"));
     }
 
-    public List<Employee> getEmployees() {
+    public Set<Employee> getEmployees() {
         return employees;
     }
 
-    public List<Patient> getPatients() {
+    public Set<Patient> getPatients() {
         return patients;
     }
 
@@ -40,8 +47,8 @@ public abstract class Ward {
         return getClass().getSimpleName();
     }
 
-    public List<Room> getRooms() {
-        return Collections.unmodifiableList(rooms);
+    public Set<Room> getRooms() {
+        return Collections.unmodifiableSet(rooms);
     }
 
     public void addRoom(Room room) throws NullPointerException {
@@ -66,9 +73,10 @@ public abstract class Ward {
         if (operation.getPossibleRehabilitationDurations().size() == 0) {
             throw new IllegalArgumentException("There must be at least ONE rehabilitation duration!");
         }
-        if (!operations.add(operation)) {
+        if (Hospital.OperationView.containsOperation(operation)) {
             throw new IllegalStateException("Duplicate operation!");
         }
+        operations.add(operation);
     }
 
     public boolean removeOperation(Operation operation) throws NullPointerException {

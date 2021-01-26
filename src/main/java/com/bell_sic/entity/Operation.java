@@ -3,10 +3,7 @@ package com.bell_sic.entity;
 import com.bell_sic.entity.wards.Ward;
 
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Operation {
     private String description;
@@ -25,6 +22,14 @@ public class Operation {
         }
         this.description = description;
         this.operationType = Objects.requireNonNull(operationType, "operation type cannot be null!");
+    }
+
+    @Override
+    public String toString() {
+        return "Operation{" +
+                "description='" + description + '\'' +
+                ", operationType=" + operationType +
+                '}';
     }
 
     @Override
@@ -88,8 +93,8 @@ public class Operation {
         return possibleRehabilitationDurations.remove(Objects.requireNonNull(period, "Period cannot be null!"));
     }
 
-    public Ward getWard() {
-        throw new UnsupportedOperationException();
-        // TODO to implement
+    public Ward getWard() throws NoSuchElementException {
+        return Hospital.WardView.getWards().stream().filter(ward -> ward.getOperations().contains(this)).findAny()
+                .orElseThrow(() -> new NoSuchElementException("No ward found!"));
     }
 }

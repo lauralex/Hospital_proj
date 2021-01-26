@@ -23,10 +23,14 @@ public class AddReceptionist extends AddEmployee {
         // Apply operation
         stateOperations.addOperation("Apply operation: (add receptionist)",
                 () -> {
-                    ward.addEmployeeToWard(Receptionist.builder(personalInfo, credentials)
-                            .addPermission(ManagePatientInfoPermission.get()).build());
-                    ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied");
-                    resetData();
+                    try {
+                        ward.addEmployeeToWard(Receptionist.builder(personalInfo, credentials)
+                                .addPermission(ManagePatientInfoPermission.get()).build());
+                        ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied");
+                        resetData();
+                    } catch (NullPointerException | IllegalStateException e) {
+                        ConsoleColoredPrinter.println(e.getMessage());
+                    }
                 }, WriteHospitalInfoPermission.get()
         );
     }

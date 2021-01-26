@@ -8,6 +8,13 @@ public class Patient {
     private String diagnosis; // TODO to evaluate (?)
     private Appointment appointment; // TODO to delete
 
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "personalInfo=" + personalInfo +
+                '}';
+    }
+
     /**
      * Construct a new {@code Patient} using {@link PersonalInfo}.
      * @param personalInfo The {@linkplain PersonalInfo} you want to set for the patient.

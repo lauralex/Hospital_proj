@@ -27,7 +27,7 @@ public class BaseApplication {
         // }
 
 
-        UILoop.execute();
+        UILoop.get().execute();
 
     }
 }

@@ -3,12 +3,9 @@ package com.bell_sic.entity.employees;
 import com.bell_sic.entity.PersonalInfo;
 import com.bell_sic.entity.permission.*;
 import com.bell_sic.state_machine.StateOperations;
-import com.bell_sic.utility.Pair;
 
 import java.security.Permissions;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public abstract class Employee {
@@ -22,6 +19,26 @@ public abstract class Employee {
         this.personalInfo = new PersonalInfo(name, lastName, dateOfBirth, cityOfBirth);
         this.credentials = new Credentials(userName, password);
         setDefaultPermissions();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return personalInfo.equals(employee.personalInfo);
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "personalInfo=" + personalInfo +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(personalInfo);
     }
 
     /**

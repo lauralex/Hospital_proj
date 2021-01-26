@@ -41,7 +41,7 @@ public class ModifyEmployee extends UIState {
             ConsoleColoredPrinter.println("No employee found!");
             return;
         }
-        selectedEmployee = res.get(0);
+        selectedEmployee = (Employee) res.toArray()[0];
         stateOperations.modifyOperationString("search", "TYPE: " + selectedEmployee.getClass().getSimpleName() +
                  " WARD: " + Hospital.EmployeeView.getEmployeeWardQuery(selectedEmployee).orElseThrow() + " " + selectedEmployee.getPersonalInfo());
     }

@@ -23,15 +23,19 @@ public class AddDoctor extends AddEmployee {
     protected void addToWardOperation() {
         // APPLY OPERATION
         stateOperations.addOperation("Apply operation (add doctor)", () -> {
-            ward.addEmployeeToWard(
-                    Doctor.builder(personalInfo, credentials)
-                            .addPermission(ExitPermission.get())
-                            .addPermission(LogoutPermission.get())
-                            .addPermission(WriteHospitalInfoPermission.get())
-                            .addPermission(ReadHospitalInfoPermission.get())
-                            .addPermission(DoctorPermission.get()).build());
-            ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied!");
-            resetData();
+            try {
+                ward.addEmployeeToWard(
+                        Doctor.builder(personalInfo, credentials)
+                                .addPermission(ExitPermission.get())
+                                .addPermission(LogoutPermission.get())
+                                .addPermission(WriteHospitalInfoPermission.get())
+                                .addPermission(ReadHospitalInfoPermission.get())
+                                .addPermission(DoctorPermission.get()).build());
+                ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied!");
+                resetData();
+            } catch (NullPointerException | IllegalStateException e) {
+                ConsoleColoredPrinter.println(e.getMessage());
+            }
         }, WriteHospitalInfoPermission.get());
     }
 }

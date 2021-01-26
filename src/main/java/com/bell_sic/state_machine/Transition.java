@@ -15,4 +15,5 @@ public enum Transition {
     GoToAppointmentRegistrationMenu,
     GoToAddOperationMenu,
     GoToReplaceDoctorMenu,
+    GoToInsertPatientMenu,
 }

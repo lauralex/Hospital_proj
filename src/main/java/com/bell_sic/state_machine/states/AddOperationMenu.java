@@ -15,13 +15,8 @@ import com.bell_sic.utility.ConsoleDelay;
 import com.bell_sic.utility.ConsoleLineReader;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
-import java.time.temporal.TemporalUnit;
 import java.util.stream.Collectors;
 
 public class AddOperationMenu extends UIState {
@@ -68,7 +63,7 @@ public class AddOperationMenu extends UIState {
             ConsoleColoredPrinter.println(e.getMessage());
             ConsoleDelay.addDelay(50);
         }
-        stateOperations.modifyOperationString("description", operationToAdd.getDescription());
+        updateOpStrings();
     }
 
     private void setType() {
@@ -80,7 +75,7 @@ public class AddOperationMenu extends UIState {
                 () -> operationToAdd.setOperationType(OperationType.SURGERY),
                 WriteHospitalInfoPermission.get());
         typeOperations.checkUserInputAndExecute();
-        stateOperations.modifyOperationString("operation type", operationToAdd.getOperationType().toString());
+        updateOpStrings();
     }
 
     private void setSelectedWard() {
@@ -92,7 +87,7 @@ public class AddOperationMenu extends UIState {
                     WriteHospitalInfoPermission.get());
         }
         wardSelectionOperations.checkUserInputAndExecute();
-        stateOperations.modifyOperationString("select a ward", selectedWard.toString());
+        updateOpStrings();
     }
 
     private void addOperationDurations() {
@@ -105,9 +100,7 @@ public class AddOperationMenu extends UIState {
         catch (DateTimeParseException e) {
             ConsoleColoredPrinter.println("No buoino, you must enter a valid period");
         }
-        stateOperations.modifyOperationString("duration", operationToAdd.getPossibleRehabilitationDurations().stream().map(
-                period -> period.getYears() + " years " + period.getMonths() + " months " + period.getDays() + " days"
-        ).collect(Collectors.toList()).toString());
+        updateOpStrings();
     }
 
     private void apply() {
@@ -122,6 +115,17 @@ public class AddOperationMenu extends UIState {
     private void resetData() {
         operationToAdd = new Operation("EXAMPLE", OperationType.SURGERY);
         selectedWard = Hospital.WardView.getAnyWard();
+        updateOpStrings();
+
+    }
+
+    private void updateOpStrings() {
+        stateOperations.modifyOperationString("add operation desc", operationToAdd.getDescription());
+        stateOperations.modifyOperationString("operation ty", operationToAdd.getOperationType().toString());
+        stateOperations.modifyOperationString("select a ward", selectedWard.toString());
+        stateOperations.modifyOperationString("duration", operationToAdd.getPossibleRehabilitationDurations().stream().map(
+                period -> period.getYears() + " years " + period.getMonths() + " months " + period.getDays() + " days"
+        ).collect(Collectors.toList()).toString());
     }
 
     @Override

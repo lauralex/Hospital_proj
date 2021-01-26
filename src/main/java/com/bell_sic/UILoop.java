@@ -15,7 +15,7 @@ public final class UILoop {
     private static final StateMachineSystem fsm = new StateMachineSystem();
     private static boolean toBreak = false;
 
-    public static void execute() {
+    public void execute() {
         Reflections reflections = new Reflections("com.bell_sic");
         var res = reflections.getSubTypesOf(Ward.class);
         for (var subtype :
@@ -60,12 +60,16 @@ public final class UILoop {
 
         UIState appointmentRegistrationMenu = new AppointmentRegistrationMenu();
         appointmentRegistrationMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
+        appointmentRegistrationMenu.addTransition(Transition.GoToInsertPatientMenu, StateId.InsertPatientMenu);
 
         UIState addOperationMenu = new AddOperationMenu();
         addOperationMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
 
         UIState replaceDoctorMenu = new DoctorMigrationMenu();
         replaceDoctorMenu.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
+
+        UIState insertPatientMenu = new InsertPatient();
+        insertPatientMenu.addTransition(Transition.GoToAppointmentRegistrationMenu, StateId.AppointmentRegistrationMenu);
 
         fsm.addState(loginState);
         fsm.addState(mainMenuState);
@@ -77,6 +81,7 @@ public final class UILoop {
         fsm.addState(appointmentRegistrationMenu);
         fsm.addState(addOperationMenu);
         fsm.addState(replaceDoctorMenu);
+        fsm.addState(insertPatientMenu);
 
         while (!toBreak) {
             fsm.getCurrentState().executeUI();
@@ -93,5 +98,12 @@ public final class UILoop {
 
     public static void setTransition(Transition transition) {
         fsm.performTransition(transition, null);
+    }
+
+    private static class InstanceHolder{
+        private static final UILoop instance = new UILoop();
+    }
+    public static UILoop get() {
+        return InstanceHolder.instance;
     }
 }
