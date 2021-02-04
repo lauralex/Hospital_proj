@@ -36,7 +36,7 @@ public abstract class EmployeeBuilderAdapter implements EmployeeBuilder {
      */
     protected Employee builderHelper(Employee employee) throws NullPointerException {
         getAllowedPermissions().elements().asIterator().forEachRemaining(permission -> employee.addPermission((PermissionContainer) permission));
-        getDisallowedPermissions().elements().asIterator().forEachRemaining(permission -> employee.addPermission((PermissionContainer) permission));
+        getDisallowedPermissions().elements().asIterator().forEachRemaining(permission -> employee.removePermission((PermissionContainer) permission));
         return employee;
     }
 

@@ -1,16 +1,14 @@
 package com.bell_sic.entity.wards.rooms;
 
+import com.bell_sic.entity.Hospital;
 import com.bell_sic.entity.wards.Ward;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Room {
     private String roomCode;
     private int capacity;
-    private final List<Bed> beds = new ArrayList<>();
+    private final Set<Bed> beds = new HashSet<>();
 
     public Room(String roomCode, int capacity) throws IllegalArgumentException, NullPointerException {
         if (roomCode.isBlank()) {
@@ -27,8 +25,21 @@ public class Room {
         this(roomCode, 10);
     }
 
-    public List<Bed> getBeds() {
-        return Collections.unmodifiableList(beds);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Room room = (Room) o;
+        return roomCode.equals(room.roomCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roomCode);
+    }
+
+    public Set<Bed> getBeds() {
+        return Collections.unmodifiableSet(beds);
     }
 
     public void addBed(Bed bed) throws IllegalStateException {
@@ -42,9 +53,9 @@ public class Room {
         return beds.remove(Objects.requireNonNull(bed, "Bed cannot be null!"));
     }
 
-    public Ward getWard() {
-        throw new UnsupportedOperationException();
-        // TODO to implement
+    public Ward getWard() throws NoSuchElementException {
+        return Hospital.WardView.getWards().stream().filter(ward -> ward.getRooms().contains(this)).findAny()
+                .orElseThrow(() -> new NoSuchElementException("No ward found"));
     }
 
     public String getRoomCode() {

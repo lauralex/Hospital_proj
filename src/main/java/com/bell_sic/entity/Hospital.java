@@ -96,6 +96,10 @@ public class Hospital {
 
         }
 
+        public static <T extends Employee> Set<T> getAllEmployeesOfType(Class<T> type) {
+            return getAllEmployees().stream().filter(type::isInstance).map(type::cast).collect(Collectors.toUnmodifiableSet());
+        }
+
         public static Optional<Ward> getEmployeeWardQuery(Employee employee) throws NullPointerException {
             return WardView.getWards().stream().filter(ward -> ward.getEmployees()
                     .contains(Objects.requireNonNull(employee, "Employee cannot be null!"))).findAny();

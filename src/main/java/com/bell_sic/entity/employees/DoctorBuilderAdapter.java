@@ -1,18 +1,12 @@
 package com.bell_sic.entity.employees;
 
-import com.bell_sic.entity.Operation;
-
-import java.util.Objects;
-
 public abstract class DoctorBuilderAdapter extends EmployeeBuilderAdapter {
-    private Operation operationOfCompetence;
+    private String qualification = "No buoino";
 
-    public EmployeeBuilder setCompetence(Operation operation) throws NullPointerException {
-        operationOfCompetence = Objects.requireNonNull(operation, "Operation cannot be null!");
-        return this;
+    protected String getQualification() {
+        return qualification;
     }
-
-    protected Operation getCompetence() {
-        return operationOfCompetence;
+    public void setQualification(String qualification) {
+        this.qualification = qualification;
     }
 }

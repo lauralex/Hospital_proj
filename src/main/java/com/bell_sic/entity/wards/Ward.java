@@ -12,7 +12,6 @@ import java.util.Objects;
 import java.util.Set;
 
 public abstract class Ward {
-    // TODO change all these fields to "Set" instead of "List" (no duplicates allowed)
     private final Set<Employee> employees = new HashSet<>();
     private final Set<Patient> patients = new HashSet<>();
     private final Set<Room> rooms = new HashSet<>();

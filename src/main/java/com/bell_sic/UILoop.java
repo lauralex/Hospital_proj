@@ -9,6 +9,7 @@ import com.bell_sic.state_machine.UIState;
 import com.bell_sic.state_machine.states.*;
 import org.reflections.Reflections;
 
+import javax.swing.plaf.nimbus.State;
 import java.lang.reflect.InvocationTargetException;
 
 public final class UILoop {
@@ -36,7 +37,7 @@ public final class UILoop {
         mainMenuState.addTransition(Transition.GoToAdminMenu, StateId.AdminMenu);
 
         UIState adminMenuState = new AdminControl();
-        adminMenuState.addTransition(Transition.LogOut, StateId.Login);
+        adminMenuState.addTransition(Transition.LogOut, StateId.PreLoginMenu);
         adminMenuState.addTransition(Transition.GoToMainMenu, StateId.MainMenu);
         adminMenuState.addTransition(Transition.GoToAddDoctorMenu, StateId.AddDoctorMenu);
         adminMenuState.addTransition(Transition.GoToAddReceptionistMenu, StateId.AddReceptionistMenu);
@@ -71,6 +72,11 @@ public final class UILoop {
         UIState insertPatientMenu = new InsertPatient();
         insertPatientMenu.addTransition(Transition.GoToAppointmentRegistrationMenu, StateId.AppointmentRegistrationMenu);
 
+        UIState preLoginMenu = new PreLogin();
+        preLoginMenu.addTransition(Transition.LogIn, StateId.Login);
+
+
+        fsm.addState(preLoginMenu);
         fsm.addState(loginState);
         fsm.addState(mainMenuState);
         fsm.addState(adminMenuState);
@@ -82,6 +88,7 @@ public final class UILoop {
         fsm.addState(addOperationMenu);
         fsm.addState(replaceDoctorMenu);
         fsm.addState(insertPatientMenu);
+
 
         while (!toBreak) {
             fsm.getCurrentState().executeUI();

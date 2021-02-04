@@ -10,17 +10,17 @@ import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.LogoutPermission;
 import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
-import com.bell_sic.state_machine.StateId;
-import com.bell_sic.state_machine.StateOperations;
-import com.bell_sic.state_machine.Transition;
-import com.bell_sic.state_machine.UIState;
+import com.bell_sic.state_machine.*;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 
 public class AdminControl extends UIState {
     public AdminControl() {
         super(StateId.AdminMenu);
 
-        stateOperations.addOperation("logout", () -> UILoop.setTransition(Transition.LogOut), LogoutPermission.get());
+        stateOperations.addOperation("logout", () -> {
+            UILoop.setTransition(Transition.LogOut);
+            SessionManager.setCurrentUser(null);
+        }, LogoutPermission.get());
         //stateOperations.addOperation("COnfirm app", () -> ((Doctor)SessionManager.getCurrentUser()).confirmAppointments(), DoctorPermission.get() );
         stateOperations.addOperation("Add a doctor", () -> Hospital.get().registerNewDoctor(), WriteHospitalInfoPermission.get());
         stateOperations.addOperation("Register an appointment", () -> Hospital.get().registerAppointment(), WriteHospitalInfoPermission.get());
@@ -37,20 +37,6 @@ public class AdminControl extends UIState {
         stateOperations.addOperation("Exit application", UILoop::breakLoop, ExitPermission.get());
     }
 
-    @Override
-    public void doBeforeEntering(Object options) {
-        if (options instanceof Employee) {
-            StateOperations ops = ((Employee) options).getSpecificOperations();
-            if (ops == null) return;
-            stateOperations.getOperations().addAll(1, ops.getOperations());
-        }
-    }
-
-    @Override
-    public void executeUI() {
-        stateOperations.checkUserInputAndExecute();
-    }
-
     private static void showAllEmployees() {
         var res = Hospital.EmployeeView.getAllEmployees();
         res.forEach(employee -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + employee.getClass().getSimpleName() + "; WARD: " + Hospital.EmployeeView.getEmployeeWardQuery(employee).orElseThrow() + "; " + employee.getPersonalInfo().toString()));
@@ -64,6 +50,20 @@ public class AdminControl extends UIState {
     private static void showAllPatients() {
         var res = PatientView.getAllPatients();
         res.forEach(patient -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + patient.getClass().getSimpleName() + "; WARD: " + PatientView.getPatientWardQuery(patient).orElseThrow() + "; " + patient.getPersonalInfo()));
+    }
+
+    @Override
+    public void doBeforeEntering(Object options) {
+        if (options instanceof Employee) {
+            StateOperations ops = ((Employee) options).getSpecificOperations();
+            if (ops == null) return;
+            stateOperations.getOperations().addAll(1, ops.getOperations());
+        }
+    }
+
+    @Override
+    public void executeUI() {
+        stateOperations.checkUserInputAndExecute();
     }
 
 }

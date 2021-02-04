@@ -16,4 +16,5 @@ public enum StateId {
     AddOperationMenu,
     ReplaceDoctorMenu,
     InsertPatientMenu,
+    PreLoginMenu,
 }

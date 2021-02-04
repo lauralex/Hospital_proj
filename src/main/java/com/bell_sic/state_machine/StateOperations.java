@@ -1,6 +1,7 @@
 package com.bell_sic.state_machine;
 
 import com.bell_sic.entity.employees.Employee;
+import com.bell_sic.entity.permission.PatientPermission;
 import com.bell_sic.entity.permission.PermissionContainer;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 import com.bell_sic.utility.ConsoleLineReader;
@@ -8,6 +9,7 @@ import com.bell_sic.utility.OnlyElemCollector;
 import com.bell_sic.utility.Pair;
 
 import java.io.IOException;
+import java.security.Permissions;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -128,7 +130,10 @@ public class StateOperations {
      * @see Employee
      */
     public Operations getPermissibleOperations() {
-
+        if (SessionManager.getCurrentUser() == null) {
+            return operations.stream().filter(pairPermissionContainerPair -> pairPermissionContainerPair
+                    .second() instanceof PatientPermission).collect(Operations::new, Operations::add, Operations::addAll);
+        }
         return operations.stream().filter(operation -> SessionManager.getCurrentUser().checkPermission(operation.second())).collect(Collectors.toCollection(Operations::new));
 
     }

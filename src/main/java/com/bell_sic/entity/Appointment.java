@@ -37,6 +37,16 @@ public class Appointment {
         return Objects.hash(dateOfAppointment, operation, patient, appointmentState);
     }
 
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "dateOfAppointment=" + dateOfAppointment +
+                ", operation=" + operation +
+                ", patient=" + patient +
+                ", appointmentState=" + appointmentState +
+                '}';
+    }
+
     /**
      * Get the date of the appointment.
      * @return The {@linkplain Date} of the appointment.

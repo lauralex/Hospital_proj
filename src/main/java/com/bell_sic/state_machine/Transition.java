@@ -7,6 +7,7 @@ public enum Transition {
     NullTransition,
     GoToMainMenu,
     LogOut,
+    LogIn,
     GoToAdminMenu,
     GoToAddDoctorMenu,
     GoToAddReceptionistMenu,
@@ -16,4 +17,5 @@ public enum Transition {
     GoToAddOperationMenu,
     GoToReplaceDoctorMenu,
     GoToInsertPatientMenu,
+    GoToPreLoginMenu,
 }
