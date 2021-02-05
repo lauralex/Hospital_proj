@@ -3,13 +3,18 @@ package com.bell_sic.entity.employees;
 import com.bell_sic.entity.*;
 import com.bell_sic.entity.permission.*;
 import com.bell_sic.entity.wards.Ward;
+import com.bell_sic.entity.wards.rooms.Bed;
+import com.bell_sic.entity.wards.rooms.Room;
 import com.bell_sic.state_machine.StateOperations;
 import com.bell_sic.utility.ConsoleColoredPrinter;
+import com.bell_sic.utility.ConsoleDelay;
 import com.bell_sic.utility.ConsoleLineReader;
 import javassist.bytecode.DuplicateMemberException;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class Doctor extends Employee {
@@ -87,7 +92,7 @@ public class Doctor extends Employee {
         appointments.stream().filter(appointment -> appointment.getAppointmentState() == AppointmentState.ACCEPTED)
                 .forEach(appointment -> consApp.addOperation(appointment.toString(),
                         () -> appointment.setAppointmentState(appointment.getOperation().getOperationType()
-                                == OperationType.SURGERY ? AppointmentState.REHABILITATION_REQUIRED
+                                == OperationType.SURGERY ? AppointmentState.HOSPITALIZATION_REQUIRED
                                 : AppointmentState.PAST), DoctorPermission.get()));
         consApp.addOperation("Cancel", () -> {
         }, DoctorPermission.get());
@@ -142,8 +147,112 @@ public class Doctor extends Employee {
                             appointment.setAppointmentState(AppointmentState.PAST);
                         }, DoctorPermission.get())
         );
-        rehabDurationOperations.addOperation("Cancel", () -> {}, DoctorPermission.get());
+        rehabDurationOperations.addOperation("Cancel", () -> {
+        }, DoctorPermission.get());
         rehabDurationOperations.checkUserInputAndExecute();
+    }
+
+    private void consumeRehabilitation() {
+        System.out.println("Select a rehabilitation you want to complete");
+        StateOperations rehabConsOperations = new StateOperations();
+        rehabilitations.stream().filter(rehabilitation -> rehabilitation.getRehabilitationState() == RehabilitationState.ACCEPTED)
+                .forEach(rehabilitation -> rehabConsOperations.addOperation(rehabilitation.toString(),
+                        () -> rehabilitation.setRehabilitationState(RehabilitationState.PAST),
+                        DoctorPermission.get()));
+        rehabConsOperations.addOperation("Cancel", () -> {
+        }, DoctorPermission.get());
+        rehabConsOperations.checkUserInputAndExecute();
+    }
+
+    private void showRehabilitations(RehabilitationState rehabilitationState) {
+        rehabilitations.stream().filter(rehabilitation -> rehabilitation.getRehabilitationState() == rehabilitationState)
+                .forEach(rehabilitation -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN,
+                        rehabilitation.toString()));
+    }
+
+    private void selectHospitalization() {
+        System.out.println("Select a patient to hospitalize!");
+        StateOperations hospOperations = new StateOperations();
+        Hospital.EmployeeView.getAllEmployeesOfType(Doctor.class).forEach(doctor -> doctor.getAppointments().stream()
+                .filter(appointment -> appointment.getAppointmentState() == AppointmentState.HOSPITALIZATION_REQUIRED)
+                .forEach(appointment -> hospOperations.addOperation(appointment.toString(), () -> selectBed(appointment), DoctorPermission.get())));
+        hospOperations.addOperation("Cancel", () -> {
+        }, DoctorPermission.get());
+        hospOperations.checkUserInputAndExecute();
+    }
+
+    private void selectBed(Appointment appointment) {
+        System.out.print("Insert a duration (pnYnMnD): ");
+        Period duration;
+        try {
+            duration = Period.parse(ConsoleLineReader.getBufferedReader().readLine()).normalized();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        } catch (DateTimeParseException e) {
+            ConsoleColoredPrinter.println("No buoino, you must enter a valid duration!");
+            ConsoleDelay.addDelay(1000);
+            return;
+        }
+        System.out.println("Select a free bed!");
+        StateOperations freeBedOperations = new StateOperations();
+
+        Hospital.WardView.getWards().stream().map(Ward::getRooms).collect(HashSet<Room>::new, HashSet::addAll, HashSet::addAll)
+                .stream().map(Room::getBeds).collect(HashSet<Bed>::new, HashSet::addAll, HashSet::addAll).stream()
+                .filter(bed -> bed.getPatientAppointment() == null).forEach(bed -> freeBedOperations.addOperation(bed.toString(),
+                () -> {
+                    bed.setPatientAppointment(appointment);
+                    bed.setHospitalizationDuration(duration);
+                    appointment.setAppointmentState(AppointmentState.ON_HOSPITALIZATION);
+                }, DoctorPermission.get()));
+        freeBedOperations.addOperation("Cancel", () -> {
+        }, DoctorPermission.get());
+        freeBedOperations.checkUserInputAndExecute();
+    }
+
+    private void consumeHospitalization() {
+        System.out.println("Select a patient you want to dismiss!");
+        StateOperations patientDismissOperations = new StateOperations();
+        Hospital.WardView.getWards().stream().map(Ward::getRooms).collect(HashSet<Room>::new, HashSet::addAll, HashSet::addAll)
+                .stream().map(Room::getBeds).collect(HashSet<Bed>::new, HashSet::addAll, HashSet::addAll)
+                .stream().filter(bed -> bed.getPatientAppointment() != null).forEach(bed -> patientDismissOperations.addOperation(bed.toString(),
+                () -> {
+                    if (bed.getDateOut().isAfter(LocalDate.now())) {
+                        Period remaining = LocalDate.now().until(bed.getDateOut());
+                        char choice;
+                        System.out.print("Do you really want to dismiss the patient? There are " +
+                                remaining.getYears() + " years " + remaining.getMonths() + " months " + remaining.getDays() +
+                                " days remaining! (y/N): ");
+                        try {
+                            choice = ConsoleLineReader.getBufferedReader().readLine().charAt(0);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            return;
+                        }
+                        if (Character.toLowerCase(choice) != 'y') {
+                            System.out.println("Operation cancelled!");
+                            return;
+                        }
+                    }
+                    bed.getPatientAppointment().setAppointmentState(AppointmentState.REHABILITATION_REQUIRED);
+                    bed.removePatient();
+                }, DoctorPermission.get()));
+        patientDismissOperations.addOperation("Cancel", () -> {}, DoctorPermission.get());
+        patientDismissOperations.checkUserInputAndExecute();
+    }
+
+    private void showBeds() {
+        for (var ward :
+                Hospital.WardView.getWards()) {
+            for (var room :
+                    ward.getRooms()) {
+                for (var bed :
+                        room.getBeds()) {
+                    System.out.println(bed.toString());
+                }
+            }
+        }
+
     }
 
     public Ward getWard() {
@@ -159,6 +268,12 @@ public class Doctor extends Employee {
         ops.addOperation("Show accepted appointments", () -> showAppointments(AppointmentState.ACCEPTED), DoctorPermission.get());
         ops.addOperation("Show appointments/patients that need rehabilitation", () -> showAppointments(AppointmentState.REHABILITATION_REQUIRED), DoctorPermission.get());
         ops.addOperation("Select and register rehabilitation", this::selectRehabilitation, DoctorPermission.get());
+        ops.addOperation("Complete a rehabilitation", this::consumeRehabilitation, DoctorPermission.get());
+        ops.addOperation("Show current rehabilitations", () -> showRehabilitations(RehabilitationState.ACCEPTED), DoctorPermission.get());
+        ops.addOperation("Show past rehabilitations", () -> showRehabilitations(RehabilitationState.PAST), DoctorPermission.get());
+        ops.addOperation("Select patients to hospitalize", this::selectHospitalization, DoctorPermission.get());
+        ops.addOperation("Consume hospitalization", this::consumeHospitalization, DoctorPermission.get());
+        ops.addOperation("Show beds", this::showBeds, DoctorPermission.get());
         ops.addOperation("Complete appointments", this::consumeAppointment, DoctorPermission.get());
         return ops;
     }

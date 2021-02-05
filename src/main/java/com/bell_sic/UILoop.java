@@ -9,7 +9,6 @@ import com.bell_sic.state_machine.UIState;
 import com.bell_sic.state_machine.states.*;
 import org.reflections.Reflections;
 
-import javax.swing.plaf.nimbus.State;
 import java.lang.reflect.InvocationTargetException;
 
 public final class UILoop {
@@ -29,8 +28,15 @@ public final class UILoop {
             }
         }
 
+        Hospital.WardView.getWards().forEach(ward -> {
+            for (int i = 0; i < 2; i++) {
+                ward.addRoom(10);
+            }
+        });
+
         UIState loginState = new Login();
         loginState.addTransition(Transition.GoToMainMenu, StateId.MainMenu);
+        loginState.addTransition(Transition.GoToPreLoginMenu, StateId.PreLoginMenu);
 
         UIState mainMenuState = new MainMenu();
         mainMenuState.addTransition(Transition.LogOut, StateId.Login);

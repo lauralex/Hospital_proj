@@ -40,7 +40,16 @@ public abstract class Ward {
         return patients;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        return o != null && getClass() == o.getClass();
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.getClass());
+    }
 
     public String toString() {
         return getClass().getSimpleName();
@@ -52,6 +61,11 @@ public abstract class Ward {
 
     public void addRoom(Room room) throws NullPointerException {
         rooms.add(Objects.requireNonNull(room, "Room cannot be null!"));
+    }
+
+    public void addRoom(int capacity) {
+
+        rooms.add(new Room(String.valueOf(rooms.size()), capacity, this));
     }
 
     public boolean removeRoom(Room room) throws NullPointerException {

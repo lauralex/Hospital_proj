@@ -26,29 +26,30 @@ public class Login extends UIState {
 
     @Override
     public void executeUI() {
-        while (true) {
-            System.out.print("Enter username: ");
-            try {
-                String username = ConsoleLineReader.getBufferedReader().readLine();
-                System.out.print("Enter password: ");
-                String password = ConsoleLineReader.getBufferedReader().readLine();
 
-                if (checkCredentials(new Credentials(username, password))) {
-                    UILoop.setTransition(Transition.GoToMainMenu, SessionManager.getCurrentUser());
-                    break;
-                } else {
-                    ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.RED, "Wrong credentials");
-                }
-            } catch (IOException e) {
-                ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.RED, "Cannot read the input!");
-                e.printStackTrace();
-                ConsoleDelay.addDelay();
+        System.out.print("Enter username: ");
+        try {
+            String username = ConsoleLineReader.getBufferedReader().readLine();
+            System.out.print("Enter password: ");
+            String password = ConsoleLineReader.getBufferedReader().readLine();
+
+            if (checkCredentials(new Credentials(username, password))) {
+                UILoop.setTransition(Transition.GoToMainMenu, SessionManager.getCurrentUser());
+            } else {
+                ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.RED, "Wrong credentials");
+                UILoop.setTransition(Transition.GoToPreLoginMenu);
             }
+        } catch (IOException e) {
+            ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.RED, "Cannot read the input!");
+            e.printStackTrace();
+            ConsoleDelay.addDelay();
         }
+
     }
 
     /**
      * This method checks if the passed {@link Credentials} belong to any employee in the EmployeeView.
+     *
      * @param credentials The {@linkplain Credentials} to be checked.
      * @return {@code True} if the {@code credentials} are valid. {@code False} otherwise.
      */
