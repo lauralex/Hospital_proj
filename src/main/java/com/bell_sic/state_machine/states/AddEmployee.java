@@ -55,7 +55,6 @@ public abstract class AddEmployee extends UIState {
 
             } catch (IllegalArgumentException e) {
                 ConsoleColoredPrinter.println(e.getMessage());
-                e.printStackTrace();
                 ConsoleDelay.addDelay();
                 break;
             }
@@ -71,7 +70,6 @@ public abstract class AddEmployee extends UIState {
 
             } catch (IllegalArgumentException e) {
                 ConsoleColoredPrinter.println(e.getMessage());
-                e.printStackTrace();
                 ConsoleDelay.addDelay();
                 resetPersonalInfo();
                 break;
@@ -88,7 +86,6 @@ public abstract class AddEmployee extends UIState {
 
             } catch (DateTimeParseException dateTimeParseException) {
                 ConsoleColoredPrinter.println("Invalid date-time format. Use YYYY-MM-DD");
-                dateTimeParseException.printStackTrace();
                 ConsoleDelay.addDelay();
                 resetPersonalInfo();
                 break;
@@ -104,7 +101,6 @@ public abstract class AddEmployee extends UIState {
                 break;
             } catch (IllegalArgumentException e) {
                 ConsoleColoredPrinter.println(e.getMessage());
-                e.printStackTrace();
                 ConsoleDelay.addDelay();
                 resetPersonalInfo();
                 break;
@@ -119,7 +115,11 @@ public abstract class AddEmployee extends UIState {
             System.out.print("Insert username: ");
 
             try {
-                credentials.setUserName(ConsoleLineReader.getBufferedReader().readLine());
+                String username = ConsoleLineReader.getBufferedReader().readLine();
+                if (Hospital.EmployeeView.getAllEmployees().stream().anyMatch(employee -> employee.getCredentials().getUserName().equals(username))) {
+                    throw new IllegalArgumentException("Username already exists!");
+                }
+                credentials.setUserName(username);
             } catch (IOException e) {
                 ConsoleColoredPrinter.println("Invalid input string for username!");
                 e.printStackTrace();
@@ -128,7 +128,6 @@ public abstract class AddEmployee extends UIState {
                 break;
             } catch (IllegalArgumentException e) {
                 ConsoleColoredPrinter.println(e.getMessage());
-                e.printStackTrace();
                 ConsoleDelay.addDelay();
                 resetCredentials();
                 break;
@@ -146,7 +145,6 @@ public abstract class AddEmployee extends UIState {
                 break;
             } catch (IllegalArgumentException e) {
                 ConsoleColoredPrinter.println(e.getMessage());
-                e.printStackTrace();
                 ConsoleDelay.addDelay();
                 resetCredentials();
                 break;

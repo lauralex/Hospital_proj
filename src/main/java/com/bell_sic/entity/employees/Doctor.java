@@ -18,8 +18,8 @@ import java.time.format.DateTimeParseException;
 import java.util.*;
 
 public class Doctor extends Employee {
-    private final Set<Appointment> appointments = new HashSet<>();
-    private final List<Rehabilitation> rehabilitations = new ArrayList<>();
+    private Set<Appointment> appointments = new HashSet<>();
+    private List<Rehabilitation> rehabilitations = new ArrayList<>();
     private String qualification = "No buoino";
 
     public Doctor(String name, String lastName, String userName, String password, LocalDate dateOfBirth, String cityOfBirth) throws IllegalArgumentException, NullPointerException {
@@ -61,6 +61,14 @@ public class Doctor extends Employee {
 
     public Set<Appointment> getAppointments() {
         return Collections.unmodifiableSet(appointments);
+    }
+
+    public void setAppointments(Set<Appointment> appointments) throws NullPointerException {
+        this.appointments = Objects.requireNonNull(appointments, "appointments cannot be null!");
+    }
+
+    public void clearAppointments() {
+        appointments.clear();
     }
 
     public void addAppointment(Appointment appointment) throws NullPointerException, DuplicateMemberException {
@@ -111,12 +119,16 @@ public class Doctor extends Employee {
         return Collections.unmodifiableList(rehabilitations);
     }
 
+    public void setRehabilitations(List<Rehabilitation> rehabilitations) {
+        this.rehabilitations = rehabilitations;
+    }
+
     public void addRehabilitation(Rehabilitation rehabilitation) {
-        rehabilitations.add(Objects.requireNonNull(rehabilitation, "Rehabilitation cannot be null!"));
+        getRehabilitations().add(Objects.requireNonNull(rehabilitation, "Rehabilitation cannot be null!"));
     }
 
     public boolean removeRehabilitation(Rehabilitation rehabilitation) {
-        return rehabilitations.remove(Objects.requireNonNull(rehabilitation, "Rehabilitation cannot be null!"));
+        return getRehabilitations().remove(Objects.requireNonNull(rehabilitation, "Rehabilitation cannot be null!"));
     }
 
     private void selectRehabilitation() {
@@ -155,7 +167,7 @@ public class Doctor extends Employee {
     private void consumeRehabilitation() {
         System.out.println("Select a rehabilitation you want to complete");
         StateOperations rehabConsOperations = new StateOperations();
-        rehabilitations.stream().filter(rehabilitation -> rehabilitation.getRehabilitationState() == RehabilitationState.ACCEPTED)
+        getRehabilitations().stream().filter(rehabilitation -> rehabilitation.getRehabilitationState() == RehabilitationState.ACCEPTED)
                 .forEach(rehabilitation -> rehabConsOperations.addOperation(rehabilitation.toString(),
                         () -> rehabilitation.setRehabilitationState(RehabilitationState.PAST),
                         DoctorPermission.get()));
@@ -165,7 +177,7 @@ public class Doctor extends Employee {
     }
 
     private void showRehabilitations(RehabilitationState rehabilitationState) {
-        rehabilitations.stream().filter(rehabilitation -> rehabilitation.getRehabilitationState() == rehabilitationState)
+        getRehabilitations().stream().filter(rehabilitation -> rehabilitation.getRehabilitationState() == rehabilitationState)
                 .forEach(rehabilitation -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN,
                         rehabilitation.toString()));
     }
@@ -237,7 +249,8 @@ public class Doctor extends Employee {
                     bed.getPatientAppointment().setAppointmentState(AppointmentState.REHABILITATION_REQUIRED);
                     bed.removePatient();
                 }, DoctorPermission.get()));
-        patientDismissOperations.addOperation("Cancel", () -> {}, DoctorPermission.get());
+        patientDismissOperations.addOperation("Cancel", () -> {
+        }, DoctorPermission.get());
         patientDismissOperations.checkUserInputAndExecute();
     }
 
@@ -276,5 +289,9 @@ public class Doctor extends Employee {
         ops.addOperation("Show beds", this::showBeds, DoctorPermission.get());
         ops.addOperation("Complete appointments", this::consumeAppointment, DoctorPermission.get());
         return ops;
+    }
+
+    public void clearRehabilitations() {
+        rehabilitations.clear();
     }
 }
