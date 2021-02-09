@@ -124,11 +124,11 @@ public class Doctor extends Employee {
     }
 
     public void addRehabilitation(Rehabilitation rehabilitation) {
-        getRehabilitations().add(Objects.requireNonNull(rehabilitation, "Rehabilitation cannot be null!"));
+        rehabilitations.add(Objects.requireNonNull(rehabilitation, "Rehabilitation cannot be null!"));
     }
 
     public boolean removeRehabilitation(Rehabilitation rehabilitation) {
-        return getRehabilitations().remove(Objects.requireNonNull(rehabilitation, "Rehabilitation cannot be null!"));
+        return rehabilitations.remove(Objects.requireNonNull(rehabilitation, "Rehabilitation cannot be null!"));
     }
 
     private void selectRehabilitation() {

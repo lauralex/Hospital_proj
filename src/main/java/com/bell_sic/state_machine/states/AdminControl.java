@@ -14,13 +14,12 @@ import com.bell_sic.state_machine.*;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 
 public class AdminControl extends UIState {
+    private StateOperations ops;
+
     public AdminControl() {
         super(StateId.AdminMenu);
 
-        stateOperations.addOperation("logout", () -> {
-            UILoop.setTransition(Transition.LogOut);
-            SessionManager.setCurrentUser(null);
-        }, LogoutPermission.get());
+        stateOperations.addOperation("logout", this::logout, LogoutPermission.get());
         //stateOperations.addOperation("COnfirm app", () -> ((Doctor)SessionManager.getCurrentUser()).confirmAppointments(), DoctorPermission.get() );
         stateOperations.addOperation("Add a doctor", () -> Hospital.get().registerNewDoctor(), WriteHospitalInfoPermission.get());
         stateOperations.addOperation("Register an appointment", () -> Hospital.get().registerAppointment(), WriteHospitalInfoPermission.get());
@@ -35,6 +34,15 @@ public class AdminControl extends UIState {
         stateOperations.addOperation("Modify employee", () -> UILoop.setTransition(Transition.GoToModifyEmployeeMenu), WriteHospitalInfoPermission.get());
         stateOperations.addOperation("Return to main menu", () -> UILoop.setTransition(Transition.GoToMainMenu), ExitPermission.get());
         stateOperations.addOperation("Exit application", UILoop::breakLoop, ExitPermission.get());
+    }
+
+    private void logout() {
+        if (ops != null) {
+            ops.getOperations().forEach(pairPermissionContainerPair -> stateOperations.getOperations().remove(pairPermissionContainerPair));
+            ops = null;
+        }
+        UILoop.setTransition(Transition.LogOut);
+        SessionManager.setCurrentUser(null);
     }
 
     private static void showAllEmployees() {
@@ -55,11 +63,12 @@ public class AdminControl extends UIState {
     @Override
     public void doBeforeEntering(Object options) {
         if (options instanceof Employee) {
-            StateOperations ops = ((Employee) options).getSpecificOperations();
+            ops = ((Employee) options).getSpecificOperations();
             if (ops == null) return;
             stateOperations.getOperations().addAll(1, ops.getOperations());
         }
     }
+
 
     @Override
     public void executeUI() {
