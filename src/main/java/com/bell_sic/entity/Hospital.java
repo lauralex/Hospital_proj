@@ -5,6 +5,7 @@ import com.bell_sic.entity.employees.Employee;
 import com.bell_sic.entity.employees.Receptionist;
 import com.bell_sic.entity.wards.Ward;
 import com.bell_sic.state_machine.Transition;
+import javassist.bytecode.DuplicateMemberException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -106,7 +107,7 @@ public class Hospital {
             .stream().anyMatch(employee1 -> employee1.getCredentials().getUserName().equals(employee.getCredentials().getUserName()))).findAny();
         }
 
-        public static void reassignEmployeeToWard(Employee employee, Ward ward) throws NullPointerException, NoSuchElementException {
+        public static void reassignEmployeeToWard(Employee employee, Ward ward) throws NullPointerException, NoSuchElementException, DuplicateMemberException {
             getEmployeeWardQuery(Objects.requireNonNull(employee, "Employee cannot be null!")).orElseThrow().getEmployees().remove(employee);
             ward.addEmployeeToWard(employee);
         }

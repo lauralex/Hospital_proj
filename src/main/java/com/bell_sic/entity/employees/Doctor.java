@@ -88,6 +88,10 @@ public class Doctor extends Employee {
         confirmAppOperations.checkUserInputAndExecute();
     }
 
+    public void confirmSelectedAppointment(Appointment appointment) {
+        appointment.setAppointmentState(AppointmentState.ACCEPTED);
+    }
+
     private void showAppointments(AppointmentState appointmentState) {
         appointments.stream().filter(appointment -> appointment.getAppointmentState() == Objects.requireNonNull(appointmentState,
                 "Appointment state cannot be null!"))

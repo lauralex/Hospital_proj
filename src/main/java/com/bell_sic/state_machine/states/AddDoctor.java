@@ -4,6 +4,7 @@ import com.bell_sic.entity.employees.Doctor;
 import com.bell_sic.entity.permission.*;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.utility.ConsoleColoredPrinter;
+import javassist.bytecode.DuplicateMemberException;
 
 public class AddDoctor extends AddEmployee {
 
@@ -33,7 +34,7 @@ public class AddDoctor extends AddEmployee {
                                 .addPermission(DoctorPermission.get()).build());
                 ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied!");
                 resetData();
-            } catch (NullPointerException | IllegalStateException e) {
+            } catch (NullPointerException | IllegalStateException | DuplicateMemberException e) {
                 ConsoleColoredPrinter.println(e.getMessage());
             }
         }, WriteHospitalInfoPermission.get());

@@ -5,6 +5,7 @@ import com.bell_sic.entity.Operation;
 import com.bell_sic.entity.Patient;
 import com.bell_sic.entity.employees.Employee;
 import com.bell_sic.entity.wards.rooms.Room;
+import javassist.bytecode.DuplicateMemberException;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -17,9 +18,9 @@ public abstract class Ward {
     private final Set<Room> rooms = new HashSet<>();
     private final Set<Operation> operations = new HashSet<>();
 
-    public void addEmployeeToWard(Employee employee) throws NullPointerException, IllegalStateException {
+    public void addEmployeeToWard(Employee employee) throws NullPointerException, DuplicateMemberException {
         if (Hospital.EmployeeView.containsEmployee(employee)) {
-            throw new IllegalStateException("Duplicate employee!");
+            throw new DuplicateMemberException("Duplicate employee!");
         }
         employees.add(Objects.requireNonNull(employee, "Employee cannot be null!"));
     }

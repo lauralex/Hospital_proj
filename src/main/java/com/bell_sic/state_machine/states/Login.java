@@ -13,6 +13,7 @@ import com.bell_sic.state_machine.UIState;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 import com.bell_sic.utility.ConsoleDelay;
 import com.bell_sic.utility.ConsoleLineReader;
+import javassist.bytecode.DuplicateMemberException;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -58,7 +59,13 @@ public class Login extends UIState {
             var admin = Admin.builder(new PersonalInfo("alex", "bell",
                     LocalDate.now(), "Bronte"), new Credentials("lauralex", "coccode"))
                     .addPermission(ReadHospitalInfoPermission.get()).addPermission(WriteHospitalInfoPermission.get()).build();
-            Hospital.WardView.getWardByType(EmergencyWard.class).ifPresent(ward -> ward.addEmployeeToWard(admin));
+            Hospital.WardView.getWardByType(EmergencyWard.class).ifPresent(ward -> {
+                try {
+                    ward.addEmployeeToWard(admin);
+                } catch (DuplicateMemberException e) {
+                    ConsoleColoredPrinter.println(e.getMessage());
+                }
+            });
 
             admin.addPermission(LogoutPermission.get());
             admin.addPermission(ExitPermission.get());

@@ -5,6 +5,7 @@ import com.bell_sic.entity.permission.ManagePatientInfoPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.utility.ConsoleColoredPrinter;
+import javassist.bytecode.DuplicateMemberException;
 
 public class AddReceptionist extends AddEmployee {
     public AddReceptionist() {
@@ -28,7 +29,7 @@ public class AddReceptionist extends AddEmployee {
                                 .addPermission(ManagePatientInfoPermission.get()).build());
                         ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied");
                         resetData();
-                    } catch (NullPointerException | IllegalStateException e) {
+                    } catch (NullPointerException | IllegalStateException | DuplicateMemberException e) {
                         ConsoleColoredPrinter.println(e.getMessage());
                     }
                 }, WriteHospitalInfoPermission.get()
