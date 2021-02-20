@@ -3,12 +3,17 @@ package com.bell_sic.entity.employees;
 import com.bell_sic.entity.*;
 import javassist.bytecode.DuplicateMemberException;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestWatcher;
 
 import java.time.LocalDate;
 import java.time.Period;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@ExtendWith(DoctorTest.CustomWatcher.class)
 class DoctorTest {
     private final Doctor doc = new Doctor("ciccio", "ciccia", "lauralex", "coccode",
             LocalDate.now(), "bronte");
@@ -49,6 +54,22 @@ class DoctorTest {
         doc.addRehabilitation(rehabilitation);
         Assertions.assertTrue(doc.getRehabilitations().contains(rehabilitation));
 
+    }
+
+    static class CustomWatcher implements TestWatcher, BeforeTestExecutionCallback {
+        @Override
+        public void testFailed(ExtensionContext context, Throwable cause) {
+            context.getParent().ifPresent(extensionContext ->
+                    extensionContext.getStore(ExtensionContext.Namespace.create(getClass())).put("failed", true));
+        }
+
+        @Override
+        public void beforeTestExecution(ExtensionContext context) {
+            context.getParent().ifPresent(extensionContext ->
+                    Assumptions.assumeFalse(extensionContext.getStore(ExtensionContext.Namespace.create(getClass())).getOrDefault(
+                            "failed", boolean.class, false
+                    ), "Previous tests failed!"));
+        }
     }
 
 }
