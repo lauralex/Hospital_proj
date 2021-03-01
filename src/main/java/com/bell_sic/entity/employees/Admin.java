@@ -18,6 +18,7 @@ public class Admin extends Employee {
     protected void setDefaultPermissions() {
         addPermission(ReadHospitalInfoPermission.get());
         addPermission(WriteHospitalInfoPermission.get());
+        addPermission(AdminPermission.get());
         addPermission(ExitPermission.get());
         addPermission(LogoutPermission.get());
     }

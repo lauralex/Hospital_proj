@@ -27,11 +27,8 @@ public class AddDoctor extends AddEmployee {
             try {
                 ward.addEmployeeToWard(
                         Doctor.builder(personalInfo, credentials)
-                                .addPermission(ExitPermission.get())
-                                .addPermission(LogoutPermission.get())
-                                .addPermission(WriteHospitalInfoPermission.get())
-                                .addPermission(ReadHospitalInfoPermission.get())
-                                .addPermission(DoctorPermission.get()).build());
+                                //.addPermission(WriteHospitalInfoPermission.get())
+                                .addPermission(ReadHospitalInfoPermission.get()).build());
                 ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied!");
                 resetData();
             } catch (NullPointerException | IllegalStateException | DuplicateMemberException e) {

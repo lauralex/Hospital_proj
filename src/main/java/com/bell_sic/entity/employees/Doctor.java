@@ -45,7 +45,7 @@ public class Doctor extends Employee {
     protected void setDefaultPermissions() {
         addPermission(ExitPermission.get());
         addPermission(LogoutPermission.get());
-        addPermission(ManagePatientInfoPermission.get());
+        addPermission(DoctorPermission.get());
     }
 
     public String getQualification() {

@@ -6,10 +6,7 @@ import com.bell_sic.entity.PatientView;
 import com.bell_sic.entity.employees.Doctor;
 import com.bell_sic.entity.employees.Employee;
 import com.bell_sic.entity.employees.Receptionist;
-import com.bell_sic.entity.permission.ExitPermission;
-import com.bell_sic.entity.permission.LogoutPermission;
-import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
-import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
+import com.bell_sic.entity.permission.*;
 import com.bell_sic.state_machine.*;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 
@@ -25,13 +22,13 @@ public class AdminControl extends UIState {
         stateOperations.addOperation("Register an appointment", () -> Hospital.get().registerAppointment(), WriteHospitalInfoPermission.get());
         stateOperations.addOperation("Add an operation", () -> Hospital.get().addOperation(), WriteHospitalInfoPermission.get());
         stateOperations.addOperation("Replace a doctor", () -> Hospital.get().replaceDoctor(), WriteHospitalInfoPermission.get());
-        stateOperations.addOperation("Add a receptionist", () -> UILoop.setTransition(Transition.GoToAddReceptionistMenu), WriteHospitalInfoPermission.get());
+        stateOperations.addOperation("Add a receptionist", () -> UILoop.setTransition(Transition.GoToAddReceptionistMenu), AdminPermission.get());
         stateOperations.addOperation("Add patient", () -> UILoop.setTransition(Transition.GoToAddPatientMenu), WriteHospitalInfoPermission.get());
         stateOperations.addOperation("Show all employees", AdminControl::showAllEmployees, ReadHospitalInfoPermission.get());
         stateOperations.addOperation("Show all patients", AdminControl::showAllPatients, ReadHospitalInfoPermission.get());
         stateOperations.addOperation("Show receptionists", () -> showEmployeesByType(Receptionist.class), ReadHospitalInfoPermission.get());
         stateOperations.addOperation("Show doctors", () -> showEmployeesByType(Doctor.class), ReadHospitalInfoPermission.get());
-        stateOperations.addOperation("Modify employee", () -> UILoop.setTransition(Transition.GoToModifyEmployeeMenu), WriteHospitalInfoPermission.get());
+        stateOperations.addOperation("Modify employee", () -> UILoop.setTransition(Transition.GoToModifyEmployeeMenu), AdminPermission.get());
         stateOperations.addOperation("Return to main menu", () -> UILoop.setTransition(Transition.GoToMainMenu), ExitPermission.get());
         stateOperations.addOperation("Exit application", UILoop::breakLoop, ExitPermission.get());
     }

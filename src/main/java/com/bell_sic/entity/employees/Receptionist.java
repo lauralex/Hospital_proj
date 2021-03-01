@@ -21,7 +21,6 @@ public class Receptionist extends Employee {
     protected void setDefaultPermissions() {
         addPermission(ExitPermission.get());
         addPermission(LogoutPermission.get());
-        addPermission(ManagePatientInfoPermission.get());
     }
 
     public static EmployeeBuilder builder(PersonalInfo personalInfo, Credentials credentials) {

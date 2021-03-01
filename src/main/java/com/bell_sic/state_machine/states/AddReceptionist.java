@@ -2,6 +2,7 @@ package com.bell_sic.state_machine.states;
 
 import com.bell_sic.entity.employees.Receptionist;
 import com.bell_sic.entity.permission.ManagePatientInfoPermission;
+import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.utility.ConsoleColoredPrinter;
@@ -26,7 +27,8 @@ public class AddReceptionist extends AddEmployee {
                 () -> {
                     try {
                         ward.addEmployeeToWard(Receptionist.builder(personalInfo, credentials)
-                                .addPermission(ManagePatientInfoPermission.get()).build());
+                                .addPermission(WriteHospitalInfoPermission.get())
+                                .addPermission(ReadHospitalInfoPermission.get()).build());
                         ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied");
                         resetData();
                     } catch (NullPointerException | IllegalStateException | DuplicateMemberException e) {
