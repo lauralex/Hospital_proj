@@ -1,7 +1,10 @@
 package com.bell_sic.entity.employees;
 
 import com.bell_sic.entity.*;
-import com.bell_sic.entity.permission.*;
+import com.bell_sic.entity.permission.Credentials;
+import com.bell_sic.entity.permission.DoctorPermission;
+import com.bell_sic.entity.permission.ExitPermission;
+import com.bell_sic.entity.permission.LogoutPermission;
 import com.bell_sic.entity.wards.Ward;
 import com.bell_sic.entity.wards.rooms.Bed;
 import com.bell_sic.entity.wards.rooms.Room;

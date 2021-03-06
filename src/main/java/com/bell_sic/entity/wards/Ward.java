@@ -2,7 +2,6 @@ package com.bell_sic.entity.wards;
 
 import com.bell_sic.entity.Hospital;
 import com.bell_sic.entity.Operation;
-import com.bell_sic.entity.Patient;
 import com.bell_sic.entity.employees.Employee;
 import com.bell_sic.entity.wards.rooms.Room;
 import javassist.bytecode.DuplicateMemberException;
@@ -14,7 +13,6 @@ import java.util.Set;
 
 public abstract class Ward {
     private final Set<Employee> employees = new HashSet<>();
-    private final Set<Patient> patients = new HashSet<>();
     private final Set<Room> rooms = new HashSet<>();
     private final Set<Operation> operations = new HashSet<>();
 
@@ -29,16 +27,8 @@ public abstract class Ward {
         return employees.remove(Objects.requireNonNull(employee, "Employee cannot be null!"));
     }
 
-    public void addPatientToWard(Patient patient) throws NullPointerException {
-        patients.add(Objects.requireNonNull(patient, "Patient cannot be null!"));
-    }
-
     public Set<Employee> getEmployees() {
         return employees;
-    }
-
-    public Set<Patient> getPatients() {
-        return patients;
     }
 
     @Override

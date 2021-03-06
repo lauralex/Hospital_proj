@@ -1,7 +1,8 @@
 package com.bell_sic.state_machine.states;
 
 import com.bell_sic.entity.employees.Doctor;
-import com.bell_sic.entity.permission.*;
+import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
+import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
 import com.bell_sic.state_machine.StateId;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 import javassist.bytecode.DuplicateMemberException;

@@ -4,7 +4,6 @@ import com.bell_sic.entity.PersonalInfo;
 import com.bell_sic.entity.permission.Credentials;
 import com.bell_sic.entity.permission.ExitPermission;
 import com.bell_sic.entity.permission.LogoutPermission;
-import com.bell_sic.entity.permission.ManagePatientInfoPermission;
 
 import java.time.LocalDate;
 

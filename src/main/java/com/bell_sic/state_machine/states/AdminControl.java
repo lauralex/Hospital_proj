@@ -2,7 +2,6 @@ package com.bell_sic.state_machine.states;
 
 import com.bell_sic.UILoop;
 import com.bell_sic.entity.Hospital;
-import com.bell_sic.entity.PatientView;
 import com.bell_sic.entity.employees.Doctor;
 import com.bell_sic.entity.employees.Employee;
 import com.bell_sic.entity.employees.Receptionist;
@@ -25,7 +24,6 @@ public class AdminControl extends UIState {
         stateOperations.addOperation("Add a receptionist", () -> UILoop.setTransition(Transition.GoToAddReceptionistMenu), AdminPermission.get());
         stateOperations.addOperation("Add patient", () -> UILoop.setTransition(Transition.GoToAddPatientMenu), WriteHospitalInfoPermission.get());
         stateOperations.addOperation("Show all employees", AdminControl::showAllEmployees, ReadHospitalInfoPermission.get());
-        stateOperations.addOperation("Show all patients", AdminControl::showAllPatients, ReadHospitalInfoPermission.get());
         stateOperations.addOperation("Show receptionists", () -> showEmployeesByType(Receptionist.class), ReadHospitalInfoPermission.get());
         stateOperations.addOperation("Show doctors", () -> showEmployeesByType(Doctor.class), ReadHospitalInfoPermission.get());
         stateOperations.addOperation("Modify employee", () -> UILoop.setTransition(Transition.GoToModifyEmployeeMenu), AdminPermission.get());
@@ -50,11 +48,6 @@ public class AdminControl extends UIState {
     private static void showEmployeesByType(Class<? extends Employee> employeeType) {
         var res = Hospital.EmployeeView.searchEmployeeByType(employeeType);
         res.forEach(employee -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + employee.getClass().getSimpleName() + "; WARD: " + Hospital.EmployeeView.getEmployeeWardQuery(employee).orElseThrow() + "; " + employee.getPersonalInfo().toString()));
-    }
-
-    private static void showAllPatients() {
-        var res = PatientView.getAllPatients();
-        res.forEach(patient -> ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "TYPE: " + patient.getClass().getSimpleName() + "; WARD: " + PatientView.getPatientWardQuery(patient).orElseThrow() + "; " + patient.getPersonalInfo()));
     }
 
     @Override
