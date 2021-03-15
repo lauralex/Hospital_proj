@@ -5,7 +5,7 @@ public class PatientPermission extends ReadPermission{
      * @throws NullPointerException     If {@code name} is {@code null}.
      * @throws IllegalArgumentException If {@code name} is empty.
      */
-    public PatientPermission() throws NullPointerException, IllegalArgumentException {
+    private PatientPermission() throws NullPointerException, IllegalArgumentException {
         super("hospital.patient");
     }
 

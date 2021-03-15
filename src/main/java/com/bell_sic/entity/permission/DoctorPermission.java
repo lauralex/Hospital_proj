@@ -5,7 +5,7 @@ public class DoctorPermission extends WritePermission {
      * @throws NullPointerException     If {@code name} is {@code null}.
      * @throws IllegalArgumentException If {@code name} is empty.
      */
-    public DoctorPermission() throws NullPointerException, IllegalArgumentException {
+    private DoctorPermission() throws NullPointerException, IllegalArgumentException {
         super("hospital.doctor");
     }
 
