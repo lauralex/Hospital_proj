@@ -102,9 +102,10 @@ public class Hospital {
         }
 
         public static Optional<Ward> getEmployeeWardQuery(Employee employee) throws NullPointerException {
-            return WardView.getWards().stream().filter(ward -> ward.getEmployees()
+            var cocco = WardView.getWards().stream().filter(ward -> ward.getEmployees()
                     .contains(Objects.requireNonNull(employee, "Employee cannot be null!")) || ward.getEmployees()
             .stream().anyMatch(employee1 -> employee1.getCredentials().getUserName().equals(employee.getCredentials().getUserName()))).findAny();
+            return cocco;
         }
 
         public static void reassignEmployeeToWard(Employee employee, Ward ward) throws NullPointerException, NoSuchElementException, DuplicateMemberException {

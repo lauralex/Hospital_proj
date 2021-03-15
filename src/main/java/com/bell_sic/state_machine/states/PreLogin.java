@@ -14,6 +14,7 @@ public class PreLogin extends UIState {
         super(StateId.PreLoginMenu);
         stateOperations.addOperation("Login", () -> UILoop.setTransition(Transition.LogIn), PatientPermission.get());
         stateOperations.addOperation("Show operations", this::showOps, PatientPermission.get());
+        stateOperations.addOperation("Exit", UILoop::breakLoop, PatientPermission.get());
     }
 
     private void showOps() {

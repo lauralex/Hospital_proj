@@ -15,7 +15,7 @@ public final class UILoop {
     private static final StateMachineSystem fsm = new StateMachineSystem();
     private static boolean toBreak = false;
 
-    public void execute() {
+    public static void execute() {
         Reflections reflections = new Reflections("com.bell_sic");
         var res = reflections.getSubTypesOf(Ward.class);
         for (var subtype :
@@ -107,11 +107,5 @@ public final class UILoop {
     public static void setTransition(Transition transition) {
         fsm.performTransition(transition, null);
     }
-
-    private static class InstanceHolder{
-        private static final UILoop instance = new UILoop();
-    }
-    public static UILoop get() {
-        return InstanceHolder.instance;
-    }
+    
 }
