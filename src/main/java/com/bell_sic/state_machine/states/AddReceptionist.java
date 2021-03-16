@@ -1,5 +1,6 @@
 package com.bell_sic.state_machine.states;
 
+import com.bell_sic.entity.employees.EmployeeBuilder;
 import com.bell_sic.entity.employees.Receptionist;
 import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
@@ -20,20 +21,13 @@ public class AddReceptionist extends AddEmployee {
     }
 
     @Override
-    protected void addToWardOperation() {
-        // Apply operation
-        stateOperations.addOperation("Apply operation: (add receptionist)",
-                () -> {
-                    try {
-                        ward.addEmployeeToWard(Receptionist.builder(personalInfo, credentials)
-                                .addPermission(WriteHospitalInfoPermission.get())
-                                .addPermission(ReadHospitalInfoPermission.get()).build());
-                        ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied");
-                        resetData();
-                    } catch (NullPointerException | IllegalStateException | DuplicateMemberException e) {
-                        ConsoleColoredPrinter.println(e.getMessage());
-                    }
-                }, WriteHospitalInfoPermission.get()
-        );
+    protected EmployeeBuilder setEmployeeBuilder() {
+        return Receptionist.builder(personalInfo, credentials)
+                .addPermission(WriteHospitalInfoPermission.get());
+    }
+
+    @Override
+    protected String setEmployeeType() {
+        return "Receptionist";
     }
 }

@@ -3,8 +3,12 @@ package com.bell_sic.state_machine.states;
 import com.bell_sic.UILoop;
 import com.bell_sic.entity.Hospital;
 import com.bell_sic.entity.PersonalInfo;
+import com.bell_sic.entity.employees.Doctor;
+import com.bell_sic.entity.employees.DoctorBuilderAdapter;
+import com.bell_sic.entity.employees.EmployeeBuilder;
 import com.bell_sic.entity.permission.Credentials;
 import com.bell_sic.entity.permission.ExitPermission;
+import com.bell_sic.entity.permission.ReadHospitalInfoPermission;
 import com.bell_sic.entity.permission.WriteHospitalInfoPermission;
 import com.bell_sic.entity.wards.Ward;
 import com.bell_sic.state_machine.StateId;
@@ -14,6 +18,7 @@ import com.bell_sic.state_machine.UIState;
 import com.bell_sic.utility.ConsoleColoredPrinter;
 import com.bell_sic.utility.ConsoleDelay;
 import com.bell_sic.utility.ConsoleLineReader;
+import javassist.bytecode.DuplicateMemberException;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -194,7 +199,24 @@ public abstract class AddEmployee extends UIState {
         stateOperations.modifyOperationString("modify assigned", ward.toString());
     }
 
-    protected abstract void addToWardOperation();
+    protected void addToWardOperation() {
+        stateOperations.addOperation("Apply operation (add " + setEmployeeType() + ")", () -> {
+            try {
+                ward.addEmployeeToWard(
+                        setEmployeeBuilder()
+                                .addPermission(ReadHospitalInfoPermission.get()).build());
+                ConsoleColoredPrinter.println(ConsoleColoredPrinter.Color.GREEN, "Operation applied!");
+                resetData();
+            } catch (NullPointerException | IllegalStateException | DuplicateMemberException | IllegalArgumentException e) {
+                ConsoleColoredPrinter.println(e.getMessage());
+            }
+        }, WriteHospitalInfoPermission.get());
+    }
+
+    protected abstract EmployeeBuilder setEmployeeBuilder();
+    protected abstract String setEmployeeType();
+
+    protected void additionalOperations() { }
 
     protected void addEmployeeUI() {
         // INDEX 0 OPERATION
@@ -211,6 +233,8 @@ public abstract class AddEmployee extends UIState {
 
         // INDEX 3 OPERATION
         stateOperations.addOperation("Modify assigned ward: ", ward.toString(), this::modifyWard, WriteHospitalInfoPermission.get());
+
+        additionalOperations();
 
         addToWardOperation();
 

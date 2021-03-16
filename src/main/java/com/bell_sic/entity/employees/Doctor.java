@@ -33,7 +33,7 @@ public class Doctor extends Employee {
         super(personalInfo, credentials);
     }
 
-    public static EmployeeBuilder builder(PersonalInfo personalInfo, Credentials credentials) {
+    public static DoctorBuilderAdapter builder(PersonalInfo personalInfo, Credentials credentials) {
         return new DoctorBuilderAdapter() {
             @Override
             public Employee build() {
@@ -218,6 +218,7 @@ public class Doctor extends Employee {
 
         Hospital.WardView.getWards().stream().map(Ward::getRooms).collect(HashSet<Room>::new, HashSet::addAll, HashSet::addAll)
                 .stream().map(Room::getBeds).collect(HashSet<Bed>::new, HashSet::addAll, HashSet::addAll).stream()
+                .sorted(Comparator.comparing(o -> o.getParentRoom().getParentWard().toString()))
                 .filter(bed -> bed.getPatientAppointment() == null).forEach(bed -> freeBedOperations.addOperation(bed.toString(),
                 () -> {
                     bed.setPatientAppointment(appointment);

@@ -37,22 +37,6 @@ public class Patient {
     }
 
     /**
-     * This static method gives you a properly configured {@link PatientBuilder} for the patient.
-     * @param personalInfo The {@linkplain PersonalInfo} you want to set for the patient.
-     * @return A properly configured {@linkplain PatientBuilder}.
-     * @throws NullPointerException If {@code PersonalInfo} is {@code null}.
-     */
-    public static PatientBuilder builder(PersonalInfo personalInfo) throws NullPointerException {
-        return new PatientBuilderAdapter() {
-            @Override
-            public Patient build() {
-                var patient = new Patient(personalInfo);
-                return patient;
-            }
-        };
-    }
-
-    /**
      * Get the current patient's {@link PersonalInfo}.
      * @return The {@linkplain PersonalInfo} associated with the current patient.
      */
