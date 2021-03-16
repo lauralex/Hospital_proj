@@ -6,7 +6,7 @@ public class AdminPermission extends WritePermission implements ReadPermissionIn
      * @throws NullPointerException     If {@code name} is {@code null}.
      * @throws IllegalArgumentException If {@code name} is empty.
      */
-    public AdminPermission() throws NullPointerException, IllegalArgumentException {
+    private AdminPermission() throws NullPointerException, IllegalArgumentException {
         super("hospital.admin");
     }
 
