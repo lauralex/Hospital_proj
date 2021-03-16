@@ -11,6 +11,7 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import java.time.LocalDate;
 import java.time.Period;
 
+// Integration tests for doctor operations
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ExtendWith(DoctorTest.CustomWatcher.class)
